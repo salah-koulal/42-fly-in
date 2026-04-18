@@ -57,7 +57,7 @@ class MapParser:
                 else:
                     raise ValueError(f"FAAAAAAAAAH! Line {n_line}: the first line must be nb_drones \
                                     'nb_drones: <valid_integer>' ")
-            elif line.startswith
+            # elif line.startswith
         return ParsedMap()
 
 
