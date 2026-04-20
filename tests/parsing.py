@@ -1,5 +1,5 @@
 from typing import List, Dict, Optional
-# from src.models import Zone
+from src.models import Zone
 from pydantic import BaseModel
 from pathlib import Path
 import sys
@@ -57,7 +57,54 @@ class MapParser:
                 else:
                     raise ValueError(f"FAAAAAAAAAH! Line {n_line}: the first line must be nb_drones \
                                     'nb_drones: <valid_integer>' ")
-            # elif line.startswith
+            # start_hub parsing here!
+            elif line.startswith("start_hub:"):
+                if start_hub is not None:
+                    raise ValueError(f"FAAAAAAAAAAH! Line {n_line}: It must be just one start hub per map")
+                content = line.replace("start_hub: ","").strip()
+                parts = content.split()
+                if len(parts) < 3:
+                    raise ValueError(f"Line {n_line}: start_hub needs <name, (x,y)>")
+                name = parts[0]
+                try:
+                    x = int(parts[1])
+                    y = int(parts[2])
+                except ValueError:
+                    raise ValueError(f"FAAAH ! Line {n_line}: x and y must be valid integers")
+                
+                zone_metadata = " ".join(parts[3:]) if len(parts) > 3 else None
+                start_hub = Zone(name, x, y)
+                self.zones[name] = start_hub
+                
+                print(f"-> Start Hub found it : {name} in ({x}, {y})")
+                continue
+            
+            
+            # end_hub parsing heree! same thing as start_hub
+            elif line.startswith("end_hub: "):
+                if end_hub is not None:
+                    raise ValueError(f"Line {n_line}: It must be just one end hub per map")
+                content = line.replace("end_hub: ", "").strip()
+                print(f"<<<<<<<< {content} >>>>>>>>>")
+                parts = content.split()
+                if len(parts) < 3:
+                        raise ValueError(f"Line {n_line}: end_hub needs <name, (x, y)>")
+                name  = parts[0]
+                try:
+                    x = int(parts[1])
+                    y = int(parts[2])
+                except ValueError:
+                    raise ValueError(f"Line {n_line}: x and y must be valid integers")
+                
+                print(parts[3:])
+                zone_metadata = " ".join(parts[3:]) if len(parts) > 3 else None
+                end_hub = Zone(name, x, y)
+                self.zones[name] = end_hub
+                print(f"-> End Hub found it : {name} in ({x}, {y})")
+                continue
+            
+            # TBC AJMI ...
+
         return ParsedMap()
 
 
