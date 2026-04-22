@@ -10,3 +10,5 @@ end_hub: goal 3 5 [color=red zone=restricted]
 connection: start-waypoint1 [max_link_capacity=2]
 connection: waypoint1-waypoint2
 connection: waypoint2-goal
+
+borait: ger
