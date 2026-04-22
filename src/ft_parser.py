@@ -24,13 +24,13 @@ class MapParser:
         self.nb_drones_parsed = False
 
     def _parse_metadata(self, metadata_str: Optional[str], n_line: int) -> dict:
-        """Katchd string bhal '[color=red zone=restricted]' w katrej3o dictionnaire."""
+        """It takes string = '[color=red zone=restricted]' and return dictionnary."""
         if not metadata_str:
             return {}
             
         metadata_str = metadata_str.strip()
         if not (metadata_str.startswith("[") and metadata_str.endswith("]")):
-            raise ValueError(f"Line {n_line}: Metadata khassha tkoun bin m39oufat [...] -> '{metadata_str}'")
+            raise ValueError(f"Line {n_line}: Metadata must be between [...] -> '{metadata_str}'")
             
         content = metadata_str[1:-1].strip()
         if not content:
@@ -41,12 +41,12 @@ class MapParser:
         
         for item in items:
             if "=" not in item:
-                raise ValueError(f"Line {n_line}: Metadata syntax ghalat f '{item}', khassha tkoun key=value")
+                raise ValueError(f"Line {n_line}: Metadata syntax error in '{item}', must be key=value")
                 
             key, value = item.split("=", 1)
             
             if key in parsed_data:
-                raise ValueError(f"Line {n_line}: L-key '{key}' m3awd f metadata")
+                raise ValueError(f"Line {n_line}: Key '{key}' is duplicated in metadata")
                 
             parsed_data[key] = value
             
@@ -82,7 +82,7 @@ class MapParser:
                     try:
                         nb_drones = int(drones_str)
                     except ValueError:
-                        raise ValueError(f"Line {n_line}: nb_drones must be a valid integer dude!")
+                        raise ValueError(f"Line {n_line}: nb_drones must be a valid integer!")
 
                     if nb_drones <= 0:
                         raise ValueError(f"Line {n_line}: nb_drones must be > 0")
@@ -102,7 +102,7 @@ class MapParser:
                 
                 name = parts[0]
                 if name in self.zones:
-                    raise ValueError(f"Line {n_line}: L-ma7ata '{name}' m3awda")
+                    raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     
                 try:
                     x = int(parts[1])
@@ -130,7 +130,7 @@ class MapParser:
                 
                 name = parts[0]
                 if name in self.zones:
-                    raise ValueError(f"Line {n_line}: L-ma7ata '{name}' m3awda")
+                    raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     
                 try:
                     x = int(parts[1])
@@ -156,7 +156,7 @@ class MapParser:
                 
                 name = parts[0]
                 if name in self.zones:
-                    raise ValueError(f"Line {n_line}: L-ma7ata '{name}' m3awda")
+                    raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     
                 try:
                     x = int(parts[1])
@@ -183,7 +183,7 @@ class MapParser:
                 color = meta_dict.get("color", None)
                 
                 hub_zone = Zone(name, x, y, zone_type=zone_type, max_drones=max_drones, color=color)
-                print(f"{name} ------>> metadata : {zone_type},{max_drones},{color}")
+                # print(f"{name} ------>> metadata : {zone_type},{max_drones},{color}")
                 self.zones[name] = hub_zone
                 continue
             
@@ -213,7 +213,8 @@ class MapParser:
                 max_cap_str = meta_dict.get("max_link_capacity", "1")
                 try:
                     max_capacity = int(max_cap_str)
-                    if max_capacity <= 0: raise ValueError()
+                    if max_capacity <= 0: 
+                        raise ValueError()
                 except ValueError:
                     raise ValueError(f"Line {n_line}: max_link_capacity must be >= 0")
                 
@@ -231,13 +232,14 @@ class MapParser:
             else:
                 raise ValueError(f"Line {n_line}: unknown parameter or syntax -> '{line}'") 
                 
-        # 6. Final Validation
         if not self.nb_drones_parsed:
             raise ValueError("There is no (nb_drones) in the file")
         if start_hub is None:
             raise ValueError("There is no start_hub in the file")
         if end_hub is None:
             raise ValueError("There is no end_hub in the file")
+        if (start_hub.x == end_hub.x and start_hub.y == end_hub.y):
+            raise ValueError("The start_hub should be different than the end_hub") 
             
         return ParsedMap(
                 nb_drones=nb_drones,
@@ -248,22 +250,43 @@ class MapParser:
             )
     
 
-def main():
-    parser = MapParser() 
-    try:
-        parsed_map = parser.file_parsing("./test.txt")
-        print("Map parsed successfully!")
-    except ValueError as e:
-        print(f"Parsing Error: {e}")
-        sys.exit(1)
-    except FileNotFoundError as e:
-        print(f"File Error: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Unexpected Error: {e}")
-        sys.exit(1)
+# def main():
+#     parser = MapParser() 
+#     try:
+#         parsed_map = parser.file_parsing("./test.txt")
+#         print("Map parsed successfully!")
+#     except ValueError as e:
+#         print(f"Parsing Error: {e}")
+#         sys.exit(1)
+#     except FileNotFoundError as e:
+#         print(f"File Error: {e}")
+#         sys.exit(1)
+#     except Exception as e:
+#         print(f"Unexpected Error: {e}")
+#         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    # main()
+    parser = MapParser()
+    try:
+        print("Kan-parsi l-fichier dba...\n")
+        parsed = parser.file_parsing("./test.txt")
+        
+        print("\n✅ PARSING! this is the ParsedMap:")
+        print(f"🚁 Drones: {parsed.nb_drones}")
+        print(f"🟢 Start: {parsed.start_hub.name} (Color: {parsed.start_hub.color})")
+        print(f"🔴 End: {parsed.end_hub.name} (Color: {parsed.end_hub.color})")
+        
+        print("🏢 Hubs (3adyin):")
+        for name, zone in parsed.zones.items():
+            if name not in (parsed.start_hub.name, parsed.end_hub.name):
+                print(f"   * {name} | Type: {zone.zone_type.value} | Max Drones: {zone.max_drones} | color: {zone.color}")
+                
+        print("🛣️ Connections:")
+        for conn in parsed.connections:
+            print(f"   * {conn.zone1.name} <-> {conn.zone2.name} | Max Capacity: {conn.max_link_capacity}")
+            
+    except Exception as e:
+        print(f"\n❌ ERROR: {e}")
 
     
