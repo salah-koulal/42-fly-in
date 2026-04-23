@@ -231,7 +231,7 @@ class MapParser:
                 
             else:
                 raise ValueError(f"Line {n_line}: unknown parameter or syntax -> '{line}'") 
-                
+
         if not self.nb_drones_parsed:
             raise ValueError("There is no (nb_drones) in the file")
         if start_hub is None:
@@ -240,7 +240,19 @@ class MapParser:
             raise ValueError("There is no end_hub in the file")
         if (start_hub.x == end_hub.x and start_hub.y == end_hub.y):
             raise ValueError("The start_hub should be different than the end_hub") 
-            
+
+        seen_cords = {}
+
+        for name, zone in self.zones.items():
+            coords = (zone.x, zone.y)
+            if coords in seen_cords:
+                other_name = seen_cords[coords]
+                raise ValueError(f"Duplicate Coordinates! the zone {zone.name} and"
+                                 f" {other_name} are in the same (x, y) <{zone.x}, {zone.y}>")
+
+            seen_cords[coords] = name
+        
+        print(seen_cords)
         return ParsedMap(
                 nb_drones=nb_drones,
                 start_hub=start_hub,
@@ -269,7 +281,7 @@ if __name__ == "__main__":
     # main()
     parser = MapParser()
     try:
-        print("Kan-parsi l-fichier dba...\n")
+        print("lparsing ya wld 3mi\n")
         parsed = parser.file_parsing("./test.txt")
         
         print("\n✅ PARSING! this is the ParsedMap:")
