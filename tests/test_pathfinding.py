@@ -3,9 +3,9 @@ from src.algorithms.path_finder import PathFinder
 
 if __name__ == "__main__":
     from src.algorithms.path_finder import PathFinder
-    print("Here! we'r just parsing that sh**t")
+    print("Here! we're just parsing that sh**t")
     parser = MapParser()
-    
+
     try:
         parsed_map = parser.file_parsing("./test.txt")
         

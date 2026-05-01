@@ -1,5 +1,4 @@
 from typing import List, Dict, Optional
-import math
 from src.models.ft_zone import Zone, ZoneType
 from src.ft_parser import ParsedMap
 
@@ -23,12 +22,13 @@ class PathFinder:
             unvisited.append(zone_name)
         
         distances[start_name] = float(0)
-        
         # main loop of the algorithm (Dijkstra Loop)
         while unvisited:
             print(f"########## unvisited, so far! : {unvisited} ########### ")
             current = min(unvisited, key=lambda node: distances[node])
-            if distances[current] == math.inf:
+            # print([distances[unvisited[i]] for i in range(len(unvisited)) ])
+            # print(f"hadi lmin--------------> {current} <-----------------")
+            if distances[current] == float('inf'):
                 break
             
             if current == end_name:

@@ -81,4 +81,11 @@ add_edge(adj, 2, 0)
 print("Adjacency List Representation:")
 display_adj_list(adj)
 
-print(float('inf'))
+
+#other tests
+# malanihaya = float('inf')
+
+# print(malanihaya + 1)
+
+# add_always_8 = lambda x: x+8
+# print(add_always_8(7))
