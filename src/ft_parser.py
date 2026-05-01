@@ -4,7 +4,6 @@ from src.models.ft_connection import Connection
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-
 @dataclass
 class ParsedMap:
     """Dataclass to hold the validated map data"""
@@ -227,6 +226,8 @@ class MapParser:
                 
                 z1.neighbors[zone2_name] = conn
                 z2.neighbors[zone1_name] = conn
+                
+                print(z1.name , [zone for zone in z1.neighbors.keys()])
                 continue
                 
             else:
@@ -252,7 +253,6 @@ class MapParser:
 
             seen_cords[coords] = name
         
-        print(seen_cords)
         return ParsedMap(
                 nb_drones=nb_drones,
                 start_hub=start_hub,
@@ -262,43 +262,6 @@ class MapParser:
             )
     
 
-# def main():
-#     parser = MapParser() 
-#     try:
-#         parsed_map = parser.file_parsing("./test.txt")
-#         print("Map parsed successfully!")
-#     except ValueError as e:
-#         print(f"Parsing Error: {e}")
-#         sys.exit(1)
-#     except FileNotFoundError as e:
-#         print(f"File Error: {e}")
-#         sys.exit(1)
-#     except Exception as e:
-#         print(f"Unexpected Error: {e}")
-#         sys.exit(1)
 
-if __name__ == "__main__":
-    # main()
-    parser = MapParser()
-    try:
-        print("lparsing ya wld 3mi\n")
-        parsed = parser.file_parsing("./test.txt")
-        
-        print("\n✅ PARSING! this is the ParsedMap:")
-        print(f"🚁 Drones: {parsed.nb_drones}")
-        print(f"🟢 Start: {parsed.start_hub.name} (Color: {parsed.start_hub.color})")
-        print(f"🔴 End: {parsed.end_hub.name} (Color: {parsed.end_hub.color})")
-        
-        print("🏢 Hubs (3adyin):")
-        for name, zone in parsed.zones.items():
-            if name not in (parsed.start_hub.name, parsed.end_hub.name):
-                print(f"   * {name} | Type: {zone.zone_type.value} | Max Drones: {zone.max_drones} | color: {zone.color}")
-                
-        print("🛣️ Connections:")
-        for conn in parsed.connections:
-            print(f"   * {conn.zone1.name} <-> {conn.zone2.name} | Max Capacity: {conn.max_link_capacity}")
-            
-    except Exception as e:
-        print(f"\n❌ ERROR: {e}")
 
     
