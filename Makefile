@@ -4,10 +4,9 @@ PYTHON      =   python3
 PIP         =   pip3
 MAIN        =   fly-in.py
 
-# Variables Iftiradiya (Default values)
-# Ila l-user madkhel walo, ghan-khdmo b hado
-MAPS_DIR         ?=  maps
-VIZ         ?=  1
+# (Default values)
+MAPS_DIR         =  maps
+VIZ         ?=
 DEF_MAP = $(MAPS_DIR)/easy/01_linear_path.txt
 # Colors
 GREEN       =   \033[0;32m

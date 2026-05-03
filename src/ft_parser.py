@@ -227,7 +227,10 @@ class MapParser:
                 z1.neighbors[zone2_name] = conn
                 z2.neighbors[zone1_name] = conn
                 
-                print(z1.name , [zone for zone in z1.neighbors.keys()])
+                
+                # just see the each zone's neighbors
+                # print(z1.name , [zone for zone in z1.neighbors.keys()])
+                
                 continue
                 
             else:

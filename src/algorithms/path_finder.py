@@ -1,68 +1,65 @@
-from typing import List, Dict, Optional
-from src.models.ft_zone import Zone, ZoneType
+import heapq
+from typing import Dict, List, Optional
+from src.models.ft_zone import ZoneType
 from src.ft_parser import ParsedMap
 
 class PathFinder:
     def __init__(self, parsed_map: ParsedMap):
-        """It takes just the parsed map"""
-        self.map_data = parsed_map
-        self.zones = parsed_map.zones
+        self.map = parsed_map
+        self.end_name = parsed_map.end_hub.name
+        
+        self.distances: Dict[str, float] = self._compute_reverse_distances()
     
     
-    def dijkstra(self, start_name: str, end_name: str) -> Optional[List[str]]:
-        """To be added later """
-        distances: Dict[str, float] = {}
-        previous_nodes: Dict[str, Optional[str]] = {}
-        unvisited: List[str] = []
+    def _compute_reverse_distances(self) -> Dict[str, float]:
+        distances = {name: float('inf') for name in self.map.zones}
+        distances[self.end_name] = 0.0
         
-        #initialization of zones
-        for zone_name in self.zones:
-            distances[zone_name] = float('inf')
-            previous_nodes[zone_name] = None
-            unvisited.append(zone_name)
         
-        distances[start_name] = float(0)
-        # main loop of the algorithm (Dijkstra Loop)
-        while unvisited:
-            print(f"########## unvisited, so far! : {unvisited} ########### ")
-            current = min(unvisited, key=lambda node: distances[node])
-            # print([distances[unvisited[i]] for i in range(len(unvisited)) ])
-            # print(f"hadi lmin--------------> {current} <-----------------")
-            if distances[current] == float('inf'):
-                break
+        pq = [(0.0, self.end_name)]
+        
+        while pq:
+            current_cost, current_name = heapq.heappop(pq)
+            if current_cost > distances[current_name]:
+                continue
             
-            if current == end_name:
-                break
-            
-            current_zone = self.zones[current]
-            
+            current_zone = self.map.zones[current_name]
             for neighbor_name in current_zone.neighbors:
-                if neighbor_name not in unvisited:
+                neighbor_zone = self.map.zones[neighbor_name]
+                if neighbor_zone.zone_type == ZoneType.BLOCKED:
                     continue
                 
-                neighbor_zone = self.zones[neighbor_name]
+                move_cost = 2.0 if current_zone.zone_type == ZoneType.RESTRICTED else 1.0
                 
-                cost = 2 if neighbor_zone.zone_type == ZoneType.RESTRICTED else 1
-                new_distance = distances[current] + cost
+                if current_zone.zone_type == ZoneType.PRIORITY:
+                    move_cost -= 0.05
+                new_cost = current_cost + move_cost
+                
+                if new_cost < distances[neighbor_name]:
+                    distances[neighbor_name] = new_cost
+                    heapq.heappush(pq, (new_cost, neighbor_name))
+                    
+        return distances
+    
+    
+    def get_distance(self, zone_name: str) -> float:
+        return self.distances.get(zone_name, float('inf'))
+    
+    def get_best_next_zones(self, current_name: str) -> List[str]:
+        current_zone = self.map.zones[current_name]
+        ranked_neighbors = []
 
-                
-                # Update distances & previous)
-                if new_distance < distances[neighbor_name]:
-                    distances[neighbor_name] = new_distance
-                    previous_nodes[neighbor_name] = current
-                
-            unvisited.remove(current)
+        for neighbor_name in current_zone.neighbors:
+            neighbor_zone = self.map.zones[neighbor_name]
             
-        # backtracking
-        current_step = end_name
-        path: List[str] = []
-        while current_step is not None:
-            path.append(current_step)
-            current_step = previous_nodes[current_step]
-
-        path.reverse()
-        print(path)
-        if path and path[0] == start_name:
-            print(f"Total Cost (Turns): {distances[end_name]}") 
-            return path
-        return None                    
+            dist = self.get_distance(neighbor_name)
+            if dist == float('inf') and neighbor_name != self.end_name:
+                continue
+            move_cost = 2.0 if neighbor_zone.zone_type == ZoneType.RESTRICTED else 1.0
+            bias = -0.05 if neighbor_zone.zone_type == ZoneType.PRIORITY else 0.0
+            
+            projected_cost = dist + move_cost + bias
+            
+            ranked_neighbors.append((projected_cost, move_cost, neighbor_name))
+            ranked_neighbors.sort(key=lambda x: (x[0], x[1], x[2]))
+            return [item[2] for item in ranked_neighbors]

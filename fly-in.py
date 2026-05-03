@@ -2,6 +2,7 @@ import argparse
 import sys
 from src.ft_parser import MapParser
 from src.algorithms.path_finder import PathFinder
+from src.ft_engine import Simulator
 
 def main():
     # 1. Twajad dyal l-Arguments
@@ -16,11 +17,11 @@ def main():
     # Qra l-arguments li dkhl l-user f terminal
     args = parser_args.parse_args()
 
-    print(f"🚀 Starting Fly-in Simulation with map: {args.map_file}")
-    if args.viz:
-        print("🎨 Visualization Mode: ON")
-    else:
-        print("🖥️ Terminal Mode: ON")
+    # print(f"Starting Fly-in Simulation with map: {args.map_file}")
+    # if args.viz:
+    #     print("🎨 Visualization Mode: ON")
+    # else:
+    #     print("🖥️ Terminal Mode: ON")
 
     # 2. Bda l-Khedma d- بصح (Parsing & Pathfinding)
     try:
@@ -28,24 +29,28 @@ def main():
         parsed_map = parser.file_parsing(args.map_file)
         
         pf = PathFinder(parsed_map)
-        shortest_path = pf.dijkstra(parsed_map.start_hub.name, parsed_map.end_hub.name)
+        start_name = parsed_map.start_hub.name
+        end_name = parsed_map.end_hub.name
+        
+        shortest_path = pf.dijkstra(start_name, end_name)
         
         if not shortest_path:
-            print("❌ No path found!")
+            print("No path found! Drones are stuck.!")
             sys.exit(1)
             
         print(f"✅ Found Base Path: {' -> '.join(shortest_path)}")
-        
+        total_drones = parsed_map.nb_drones
         # 3. L-Engine (Simulator) - TBC
         if args.viz:
-            # Hna ghadi t3yet l-Simulator li fih Pygame (mn b3d)
+            print("🎨 Visualization Mode: ON (Coming soon...)")
             pass
         else:
-            # Hna ghadi t3yet l-Simulator dyal T-terminal (Turn by turn f Console)
-            pass
+            sim = Simulator(parsed_map, shortest_path, total_drones)
+            sim.run_all()
+            print(f"# Total turns: {sim.turn_count}")
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"Error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
