@@ -1,53 +1,39 @@
 import argparse
 import sys
 from src.ft_parser import MapParser
-from src.algorithms.path_finder import PathFinder
+# (T2ked mn smiyt L-fichier dyal PathFinder 3ndk)
+from src.algorithms.path_finder import PathFinder 
 from src.ft_engine import Simulator
 
 def main():
-    # 1. Twajad dyal l-Arguments
     parser_args = argparse.ArgumentParser(description="Fly-in: Drone Routing & Simulator")
-    
-    # Argument asasi (Darouri): l-chemin dyal fichier map
     parser_args.add_argument("map_file", help="Path to the map .txt file (e.g., maps/test.txt)")
-    
-    # Argument ikhtiyari (Optional) dyal visualization: --viz
     parser_args.add_argument("--viz", action="store_true", help="Enable Pygame visualization")
-
-    # Qra l-arguments li dkhl l-user f terminal
     args = parser_args.parse_args()
 
-    # print(f"Starting Fly-in Simulation with map: {args.map_file}")
-    # if args.viz:
-    #     print("🎨 Visualization Mode: ON")
-    # else:
-    #     print("🖥️ Terminal Mode: ON")
-
-    # 2. Bda l-Khedma d- بصح (Parsing & Pathfinding)
     try:
         parser = MapParser()
         parsed_map = parser.file_parsing(args.map_file)
         
+        # print(parsed_map.connections)
         pf = PathFinder(parsed_map)
         start_name = parsed_map.start_hub.name
-        end_name = parsed_map.end_hub.name
         
-        shortest_path = pf.dijkstra(start_name, end_name)
-        
-        if not shortest_path:
+        if pf.get_distance(start_name) == float('inf'):
             print("No path found! Drones are stuck.!")
             sys.exit(1)
-            
-        print(f"✅ Found Base Path: {' -> '.join(shortest_path)}")
-        total_drones = parsed_map.nb_drones
-        # 3. L-Engine (Simulator) - TBC
+        
+        print(pf.distances)
+        print("PathFinder: Routes Calculated Successfully!\n\n")
+
         if args.viz:
             print("🎨 Visualization Mode: ON (Coming soon...)")
             pass
         else:
-            sim = Simulator(parsed_map, shortest_path, total_drones)
+            print(f"running fly in with the map:{args.map_file}")
+            sim = Simulator(parsed_map)
             sim.run_all()
-            print(f"# Total turns: {sim.turn_count}")
+            print(f"\n# Total turns: {sim.turn_count}")
 
     except Exception as e:
         print(f"Error: {e}")

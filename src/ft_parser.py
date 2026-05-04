@@ -100,6 +100,11 @@ class MapParser:
                     raise ValueError(f"Line {n_line}: start_hub needs <name> <x> <y>")
                 
                 name = parts[0]
+                # Zone name validation
+                if "-" in name:
+                    raise ValueError(f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'")
+                if name.endswith("-") or name.startswith("-"):
+                    raise ValueError(f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'")
                 if name in self.zones:
                     raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     
@@ -128,6 +133,10 @@ class MapParser:
                         raise ValueError(f"Line {n_line}: end_hub needs <name> <x> <y>")
                 
                 name = parts[0]
+                if "-" in name:
+                    raise ValueError(f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'")
+                if name.endswith("-") or name.startswith("-"):
+                    raise ValueError(f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'")
                 if name in self.zones:
                     raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     
@@ -154,6 +163,10 @@ class MapParser:
                     raise ValueError(f"Line {n_line}: every hub must have <name> <x> <y>")
                 
                 name = parts[0]
+                if "-" in name:
+                    raise ValueError(f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'")
+                if name.endswith("-") or name.startswith("-"):
+                    raise ValueError(f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'")
                 if name in self.zones:
                     raise ValueError(f"Line {n_line}: zone '{name}' is duplicated")
                     

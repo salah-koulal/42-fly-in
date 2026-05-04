@@ -1,7 +1,8 @@
 NAME        =   fly-in
 
-PYTHON      =   python3
-PIP         =   pip3
+VENV        =   fly-in
+PYTHON      =   $(VENV)/bin/python3
+PIP         =   $(VENV)/bin/pip3
 MAIN        =   fly-in.py
 
 # (Default values)
@@ -24,12 +25,17 @@ all:
 	@echo "  $(YELLOW)make clean$(RESET)     - Remove cache files"
 	@echo "  $(YELLOW)make lint$(RESET)      - Run flake8 + mypy"
 
-install:
-	@echo "$(CYAN)Installing dependencies...$(RESET)"
+$(VENV)/bin/activate: requirements.txt
+	@echo "$(CYAN)Creating virtual environment '$(VENV)' and installing dependencies...$(RESET)"
+	python3 -m venv $(VENV)
+	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
-	@echo "$(GREEN)Done.$(RESET)"
+	@touch $(VENV)/bin/activate
 
-run:
+install: $(VENV)/bin/activate
+	@echo "$(GREEN)Virtual environment is ready and dependencies are installed.$(RESET)"
+
+run: $(VENV)/bin/activate
 	@echo "$(CYAN)Running $(NAME) with map: $(YELLOW)$(DEF_MAP)$(RESET)"
 	@if [ "$(VIZ)" = "1" ]; then \
 		$(PYTHON) $(MAIN) $(DEF_MAP) --viz; \
@@ -40,18 +46,18 @@ run:
 # ==========================================
 # 🌟 BONUS: Interactive Menu
 # ==========================================
-menu:
+menu: $(VENV)/bin/activate
 	@echo "$(CYAN) Scanning for Maps in '$(MAPS_DIR)/'...$(RESET)"
 	@FILES=$$(find $(MAPS_DIR) -type f -name "*.txt" | sort); \
 	if [ -z "$$FILES" ]; then \
-		echo "$(YELLOW)❌ No .txt maps found in $(MAPS_DIR) !$(RESET)"; \
+		echo "$(YELLOW)No .txt maps found in $(MAPS_DIR) !$(RESET)"; \
 	else \
 		echo "$$FILES" | cat -n; \
 		echo ""; \
 		read -p "> Choose a map number: " num; \
 		map=$$(echo "$$FILES" | sed -n "$$num"p); \
 		if [ -z "$$map" ]; then \
-			echo "$(YELLOW)❌ Invalid selection.$(RESET)"; \
+			echo "$(YELLOW)Invalid selection.$(RESET)"; \
 		else \
 			read -p "🎨 Enable Pygame Visualization? (y/n): " viz_ans; \
 			echo ""; \
@@ -64,18 +70,19 @@ menu:
 	fi
 
 clean:
-	@echo "$(CYAN)Cleaning...$(RESET)"
+	@echo "$(CYAN)Cleaning caches and virtual environment...$(RESET)"
+	@rm -rf $(VENV)
 	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	@find . -type d -name ".mypy_cache" -exec rm -rf {} + 2>/dev/null || true
 	@find . -type f -name "*.pyc"       -delete 2>/dev/null || true
 	@find . -type f -name "*.pyo"       -delete 2>/dev/null || true
 	@echo "$(GREEN)Clean.$(RESET)"
 
-lint:
+lint: $(VENV)/bin/activate
 	@echo "$(CYAN)Running flake8...$(RESET)"
-	flake8 .
+	$(PYTHON) -m flake8 .
 	@echo "$(CYAN)Running mypy...$(RESET)"
-	mypy . --warn-return-any --warn-unused-ignores \
+	$(PYTHON) -m mypy . --warn-return-any --warn-unused-ignores \
 	       --ignore-missing-imports \
 	       --disallow-untyped-defs \
 	       --check-untyped-defs
