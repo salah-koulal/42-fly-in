@@ -50,10 +50,12 @@ class Simulator:
 
         link_occupancy = {self._get_connection_name(c.zone1.name, c.zone2.name): 0 for c in self.map_data.connections}
 
+        # this loop is for moving the drones that are in-transit
         for drone in self.drones:
             if drone.is_traveling:
                 if drone.advance_turn():
                     turn_moves.append(f"D{drone.id}-{drone.current_zone.name}")
+                    # print(f"@#$*#(@$#@*$========================================{drone.current_zone.name}===============)")
                     moved_this_turn.add(drone.id)
                 else:
                     turn_moves.append(f"D{drone.id}-{drone.current_connection_name}")
@@ -62,20 +64,22 @@ class Simulator:
 
         idle_drones.sort(key=lambda d: self.pf.get_distance(d.current_zone.name))
         
-            
+        
         for drone in idle_drones:
             current_name = drone.current_zone.name
             
+            # print(current_name)
             best_neighbors = list(drone.current_zone.neighbors.keys())
             best_neighbors.sort(key=lambda n: self.pf.get_distance(n))
+            # print("There are the best neighbors list",best_neighbors)
             
             for next_name in best_neighbors:
-                print("There are the best neighbors list",best_neighbors)
                 next_zone = self.map_data.zones[next_name]
                 
                 # 🛡️ FILTER 1: U-Turn Check
                 dist_next = self.pf.get_distance(next_name)
                 dist_curr = self.pf.get_distance(current_name)
+
                 if dist_next >= dist_curr:
                     continue
                 
@@ -97,7 +101,7 @@ class Simulator:
                             continue
 
                 # ✅ KOLCHI NADI: 7erek D-Drone
-                print(f"$$$$$$$$$$$$$$$$$$$$$ {zone_occupancy} ####################")
+                # print(f"$$$$$$$$$$$$$$$$$$$$$ {zone_occupancy} ####################")
                 
                 zone_occupancy[current_name] -= 1
                 zone_occupancy[next_name] = zone_occupancy.get(next_name, 0) + 1
@@ -120,15 +124,22 @@ class Simulator:
                     drone.move_to(next_zone, conn_name, move_cost - 1)
                     turn_moves.append(f"D{drone.id}-{conn_name}")
                 break
-        print(f"$$$$$$$$$$$$$$$$$$$$$ {zone_occupancy} ####################")
+        # print(f"$$$$$$$$$$$$$$$$$$$$$ {zone_occupancy} ####################")
+        # print(f"%%%%%%%%%%%%%%%%%%%%%%%%% {link_occupancy} %%%%%%%%%%%%%%%%%%%%%")
     
         return turn_moves
 
     def run_all(self):
+        end_type = str(getattr(self.end_zone, 'zone_type', '')).lower()
+        start_type = str(getattr(self.start_zone, 'zone_type', '')).lower()
+        
+        if "blocked" in end_type :
+            print("Error: Map is unsolvable! Start or Goal is BLOCKED.")
+            return
         while not self._is_finished():
             self.turn_count += 1
             moves = self.run_turn()
-            
+
             if moves:
                 # print(f"# Turn {self.turn_count}")
                 print(" ".join(moves))

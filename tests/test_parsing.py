@@ -10,7 +10,7 @@ try:
     print(f"🟢 Start: {parsed.start_hub.name} (Color: {parsed.start_hub.color})")
     print(f"🔴 End: {parsed.end_hub.name} (Color: {parsed.end_hub.color})")
 
-    print("🏢 Hubs (3adyin):")
+    print("🏢 Hubs:")
     for name, zone in parsed.zones.items():
         if name not in (parsed.start_hub.name, parsed.end_hub.name):
             print(f"   * {name} | Type: {zone.zone_type.value} | Max Drones: {zone.max_drones} | color: {zone.color}")

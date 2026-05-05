@@ -118,8 +118,12 @@ class MapParser:
                 meta_dict = self._parse_metadata(metadata_str, n_line)
                 
                 color = meta_dict.get("color", None)
-                
-                start_hub = Zone(name, x, y, color=color) # Start dima normal w tayhzo chhal ma kan f l-bidaya
+                z_type_str = meta_dict.get("zone", "normal")
+                try:
+                    zone_type = ZoneType(z_type_str)
+                except ValueError:
+                    raise ValueError(f"Line {n_line}: The zone type is unknown <'{z_type_str}'> ")
+                start_hub = Zone(name, x, y, zone_type=zone_type, color=color) # Start dima normal w tayhzo chhal ma kan f l-bidaya
                 self.zones[name] = start_hub
                 continue
             
@@ -150,8 +154,13 @@ class MapParser:
                 meta_dict = self._parse_metadata(metadata_str, n_line)
                 
                 color = meta_dict.get("color", None)
+                z_type_str = meta_dict.get("zone", "normal")
+                try:
+                    zone_type = ZoneType(z_type_str)
+                except ValueError:
+                    raise ValueError(f"Line {n_line}: The zone type is unknown <'{z_type_str}'> ")
+                end_hub = Zone(name, x,y, zone_type=zone_type, color=color)
                 
-                end_hub = Zone(name, x, y, color=color)
                 self.zones[name] = end_hub
                 continue
                 
@@ -276,8 +285,3 @@ class MapParser:
                 zones=self.zones,
                 connections=self.connections
             )
-    
-
-
-
-    

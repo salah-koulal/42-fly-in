@@ -1,5 +1,5 @@
 import heapq
-from typing import Dict, List, Optional
+from typing import Dict
 from src.models.ft_zone import ZoneType
 from src.ft_parser import ParsedMap
 
@@ -24,6 +24,7 @@ class PathFinder:
                 continue
             
             current_zone = self.map.zones[current_name]
+
             for neighbor_name in current_zone.neighbors:
                 neighbor_zone = self.map.zones[neighbor_name]
                 if neighbor_zone.zone_type == ZoneType.BLOCKED:

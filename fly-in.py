@@ -2,7 +2,8 @@ import argparse
 import sys
 from src.ft_parser import MapParser
 # (T2ked mn smiyt L-fichier dyal PathFinder 3ndk)
-from src.algorithms.path_finder import PathFinder 
+from src.algorithms.path_finder import PathFinder
+from src.models import ZoneType
 from src.ft_engine import Simulator
 
 def main():
@@ -18,7 +19,6 @@ def main():
         # print(parsed_map.connections)
         pf = PathFinder(parsed_map)
         start_name = parsed_map.start_hub.name
-        
         if pf.get_distance(start_name) == float('inf'):
             print("No path found! Drones are stuck.!")
             sys.exit(1)

@@ -7,16 +7,17 @@ if __name__ == "__main__":
     parser = MapParser()
 
     try:
-        parsed_map = parser.file_parsing("./test.txt")
+        parsed_map = parser.file_parsing("./maps/easy/01_linear_path.txt")
         
         print(f"\n🗺️ L-GPS (Pathfinder) is looking for the dest ! '{parsed_map.start_hub.name}' l '{parsed_map.end_hub.name}'...")
         pf = PathFinder(parsed_map)
-        shortest_path = pf.dijkstra(parsed_map.start_hub.name, parsed_map.end_hub.name)
+        # shortest_path = pf.dijkstra(parsed_map.start_hub.name, parsed_map.end_hub.name)
+        distances = pf.distances
         
-        if shortest_path:
-            print(f"\n✅ we found it ! A lM3llem: {' -> '.join(shortest_path)}")
+        if distances:
+            print(f"\n✅ we found all distances that are faraway from goal:  {distances}")
         else:
-            print("\n❌ Malqina 7ta triq! d-drones ghadi tbqa wa7la.")
+            print("\n❌ no distances there is a problem in reverse dijkastra")
             
     except Exception as e:
         print(f"❌ ERROR: {e}")
