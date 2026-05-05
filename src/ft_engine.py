@@ -14,10 +14,6 @@ class Simulator:
         for i in range(parsed_map.nb_drones):
             self.drones.append(Drone(i + 1, self.map_data.zones[self.start_zone.name]))
          
-        all_drones = [d for d in self.drones]
-        for i in range(self.map_data.nb_drones):
-            print(all_drones[i].current_zone.name)
-         
         # just for debuggin    
         # for zone in self.map_data.zones:
         #     print(self.map_data.zones[zone].name, end="  ")
@@ -45,7 +41,6 @@ class Simulator:
         zone_occupancy = {name: 0 for name in self.map_data.zones.keys()}
         for drone in self.drones:
             if drone.is_traveling and drone.destination_zone:
-                print(f"!!!!!!!!!!!{drone.destination_zone.name}!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 zone_occupancy[drone.destination_zone.name] += 1
             elif not drone.is_traveling:
                 zone_occupancy[drone.current_zone.name] += 1
@@ -64,14 +59,15 @@ class Simulator:
 
         idle_drones.sort(key=lambda d: self.pf.get_distance(d.current_zone.name))
         
+            
         for drone in idle_drones:
             current_name = drone.current_zone.name
-            print(f"@@@@@@@@@@@@@@@@{current_name}@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
             
             best_neighbors = list(drone.current_zone.neighbors.keys())
             best_neighbors.sort(key=lambda n: self.pf.get_distance(n))
             
             for next_name in best_neighbors:
+                print("There are the best neighbors list",best_neighbors)
                 next_zone = self.map_data.zones[next_name]
                 
                 # 🛡️ FILTER 1: U-Turn Check
@@ -121,6 +117,8 @@ class Simulator:
                     drone.move_to(next_zone, conn_name, move_cost - 1)
                     turn_moves.append(f"D{drone.id}-{conn_name}")
                 break
+        print(f"$$$$$$$$$$$$$$$$$$$$$ {zone_occupancy} ####################")
+    
         return turn_moves
 
     def run_all(self):
