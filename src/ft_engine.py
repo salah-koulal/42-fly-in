@@ -39,6 +39,9 @@ class Simulator:
         moved_this_turn = set()
         
         zone_occupancy = {name: 0 for name in self.map_data.zones.keys()}
+    
+        
+        # this loop is for checking if there is a drone is traveling
         for drone in self.drones:
             if drone.is_traveling and drone.destination_zone:
                 zone_occupancy[drone.destination_zone.name] += 1
