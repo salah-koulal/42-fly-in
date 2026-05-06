@@ -12,16 +12,15 @@ class Drone:
         self.current_connection_name = ""
         self.turns_until_arrival = 0
     
-    def move_to(self, next_zone, connection_name: str, move_cost: int):
-        """Kat-sifet d-drone l T-triq"""
+    def move_to_connection(self, next_zone, connection_name: str, move_cost: int):
+        """Kat-sifet d-drone l T-triq (To be updated later !)"""
         self.is_traveling = True
         self.destination_zone = next_zone
         self.current_connection_name = connection_name
         self.turns_until_arrival = move_cost
-        # Mss7na L-Error d remove mn hna!
     
     def advance_turn(self):
-        """Kat-n9ess L-weqt dyal T-triq koul turn"""
+        """Kat-n9ess L-weqt dyal T-triq koul turn (To be updated later !)"""
         if self.is_traveling:
             self.turns_until_arrival -= 1
             if self.turns_until_arrival <= 0:

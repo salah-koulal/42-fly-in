@@ -16,21 +16,17 @@ def main():
         parser = MapParser()
         parsed_map = parser.file_parsing(args.map_file)
         
-        # print(parsed_map.connections)
         pf = PathFinder(parsed_map)
         start_name = parsed_map.start_hub.name
+        print(pf.distances)
         if pf.get_distance(start_name) == float('inf'):
+            print(pf.distances)
             print("No path found! Drones are stuck.!")
             sys.exit(1)
-        
-        print(pf.distances)
-        print("PathFinder: Routes Calculated Successfully!\n\n")
-
         if args.viz:
             print("🎨 Visualization Mode: ON (Coming soon...)")
             pass
         else:
-            print(f"running fly in with the map:{args.map_file}")
             sim = Simulator(parsed_map)
             sim.run_all()
             print(f"\n# Total turns: {sim.turn_count}")
