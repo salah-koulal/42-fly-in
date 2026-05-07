@@ -1,11 +1,10 @@
 import argparse
 import sys
 from src.ft_parser import MapParser
-# (T2ked mn smiyt L-fichier dyal PathFinder 3ndk)
 from src.algorithms.path_finder import PathFinder
 from src.models import ZoneType
 from src.ft_engine import Simulator
-
+from src.ft_2D_renderer import Renderer2D
 def main():
     parser_args = argparse.ArgumentParser(description="Fly-in: Drone Routing & Simulator")
     parser_args.add_argument("map_file", help="Path to the map .txt file (e.g., maps/test.txt)")
@@ -18,18 +17,20 @@ def main():
         
         pf = PathFinder(parsed_map)
         start_name = parsed_map.start_hub.name
-        print(pf.distances)
+        sim = Simulator(parsed_map)
+        sim.run_all()
+        engine_history = sim.history
+        # print(pf.distances)
         if pf.get_distance(start_name) == float('inf'):
             print(pf.distances)
             print("No path found! Drones are stuck.!")
             sys.exit(1)
         if args.viz:
-            print("Visualization Mode: ON (Coming soon...)")
-            pass
+            renderer = Renderer2D(parsed_map, engine_history)
+            renderer.run()
         else:
-            sim = Simulator(parsed_map)
             sim.run_all()
-            print(f"\n# Total turns: {sim.turn_count}")
+            # print(f"\n# Total turns: {sim.turn_count}")
 
     except Exception as e:
         print(f"Error: {e}")

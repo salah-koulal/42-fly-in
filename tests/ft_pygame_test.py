@@ -25,12 +25,12 @@ bottom_surface.fill((20,20,30,100))
 
 
 
-# main_font = pygame.font.SysFont(None, 36)
-# small_font = pygame.font.SysFont(None, 24)
+main_font = pygame.font.SysFont(None, 36)
+small_font = pygame.font.SysFont(None, 24)
 # test_font = pygame.font.SysFont(['centurygothic', 'msgothic', 'arial'],24)
 try:
     bg_image = pygame.image.load("../assets/fly-in_bg.jpg") 
-    drone_image = pygame.image.load("../assets/dronegid")
+    drone_image = pygame.image.load("../assets/drone.png")
     # (Scaling) & resizing to prevent the small background
     bg_image = pygame.transform.scale(bg_image, (WIDTH, HEIGHT))
     drone_image = pygame.transform.scale(drone_image, (40,45))
@@ -74,12 +74,12 @@ while running:
     # Positioning the drone : test
     screen.blit(drone_image, (drone_pos))
     
-    # title_text = main_font.render("Map: 01_linear_path", True, (255, 255, 255))
-    # turn_text = main_font.render("Turn: 2 / 4", True, (100, 200, 255))
+    title_text = main_font.render("Map: 01_linear_path", True, (255, 255, 255))
+    turn_text = main_font.render("Turn: 2 / 4", True, (100, 200, 255))
     
     # Blit the text surfaces onto the screen
-    # screen.blit(title_text, (20, HEIGHT - 60))
-    # screen.blit(turn_text, (WIDTH // 2 - 50, HEIGHT - 60))
+    screen.blit(title_text, (20, HEIGHT - 60))
+    screen.blit(turn_text, (WIDTH // 2 - 50, HEIGHT - 60))
 
     # blitting the UI-PANELS
     screen.blit(legend_surface, (20, 20))

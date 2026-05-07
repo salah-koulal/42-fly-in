@@ -1,8 +1,8 @@
+import sys
 from typing import List
 from src.models.ft_drone import Drone
 from src.ft_parser import ParsedMap
 from src.algorithms.path_finder import PathFinder
-
 
 class Simulator:
     def __init__(self, parsed_map: ParsedMap):
@@ -20,6 +20,7 @@ class Simulator:
         #     print(self.map_data.zones[zone].name)
         # print('\n\n')
         self.turn_count = 0
+        self.history = []
 
     def _get_connection_name(self, zone1_name: str, zone2_name: str) -> str:
         z1, z2 = zone1_name.strip(), zone2_name.strip()
@@ -147,13 +148,14 @@ class Simulator:
 
         if "blocked" in end_type:
             print("Error: Map is unsolvable! Goal is BLOCKED.")
-            return
+            sys.exit()
         while not self._is_finished():
             self.turn_count += 1
             moves = self.run_turn()
 
             if moves:
                 print(" ".join(moves))
+                self.history.append(moves)
             else:
                 print(
                     f"\n[!] Engine Stalled at Turn {self.turn_count}! "
