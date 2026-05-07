@@ -59,7 +59,7 @@ menu: $(VENV)/bin/activate
 		if [ -z "$$map" ]; then \
 			echo "$(YELLOW)Invalid selection.$(RESET)"; \
 		else \
-			read -p "🎨 Enable Pygame Visualization? (y/n): " viz_ans; \
+			read -p "Enable Pygame Visualization? (y/n): " viz_ans; \
 			echo ""; \
 			if [ "$$viz_ans" = "y" ]; then \
 				$(PYTHON) $(MAIN) $$map --viz; \

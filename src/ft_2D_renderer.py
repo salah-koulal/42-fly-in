@@ -66,17 +66,33 @@ class Renderer2D:
         # ASSETS & COORDS INIT
         self._load_assets()
         self._calculate_coord_mapping() # N-7sbou L-Math d L-Pixels merra we7da!
-
+        self.COLORS = {
+            "red": (255, 50, 50),
+            "green": (50, 200, 50),
+            "blue": (50, 150, 255),
+            "yellow": (255, 215, 0),
+            "purple": (150, 50, 200),
+            "orange": (255, 150, 50),
+            "gray": (150, 150, 150),
+            "black": (40, 40, 40),
+            "white": (240, 240, 240),
+            "default": (150, 100, 250) 
+        }
     # Fix 1: Indentation m-regla
     def _load_assets(self):
-        # Fix 2: self. l-ay 7aja ghadi n-7tajouha mn be3d
-        self.main_font = pygame.font.SysFont(None, 30)
-        self.small_font = pygame.font.SysFont(None, 24)
+        try:
+            # Kan-3tiwh L-Path dyal L-Fichier NICHAN
+            self.main_font = pygame.font.Font("assets/GODOFWAR.TTF", 32)
+            self.small_font = pygame.font.Font("assets/GODOFWAR.TTF", 18)
+        except Exception as e:
+            print(f"Warning: Custom font not found. Using default. Error: {e}")
+            self.main_font = pygame.font.SysFont(None, 28)
+            self.small_font = pygame.font.SysFont(None, 24)
         
-        self.legend_surface = pygame.Surface((250, 500), pygame.SRCALPHA)
+        self.legend_surface = pygame.Surface((250, 400), pygame.SRCALPHA)
         self.legend_surface.fill((20, 20, 30, 150))
         
-        self.bottom_surface = pygame.Surface((self.WIDTH - 150, 80), pygame.SRCALPHA)
+        self.bottom_surface = pygame.Surface((self.WIDTH - 100, 80), pygame.SRCALPHA)
         self.bottom_surface.fill((20, 20, 30, 150))
         
         try:
@@ -116,18 +132,68 @@ class Renderer2D:
     def _draw_map(self):
         # 1. Rssem T-triqat (Connections)
         for conn in self.map_data.connections:
-            # 🌟 N-foutou L-Coordinates 3la L-Camera bach y-t-zomaw!
             pos1 = self.camera.apply(self.pixel_coords[conn.zone1.name])
             pos2 = self.camera.apply(self.pixel_coords[conn.zone2.name])
             line_thickness = max(1, int(4 * self.camera.zoom))
-            pygame.draw.line(self.screen, (150, 150, 150), pos1, pos2, line_thickness)
+            # Loun L-Connection (Zreq bhal t-tswira)
+            pygame.draw.line(self.screen, (100, 150, 255), pos1, pos2, line_thickness)
+            
+        # 2. Rssem L-Hubs w L-Icons
+        for name, base_pos in self.pixel_coords.items():
+            cam_pos = self.camera.apply(base_pos)
+            radius = max(5, int(20 * self.camera.zoom))
+            zone = self.map_data.zones[name]
+            
+            # --- COLOR MAPPING ---
+            # (Mola7ada: T2kked kifach m-ssmiha f parser dyalk. Ghaliban getattr(zone, 'color'))
+            z_color_str = str(getattr(zone, 'color', 'default')).lower()
+            hub_color = self.COLORS.get(z_color_str, self.COLORS["default"])
+            
+            # --- ZONE IDENTIFICATION ---
+            is_start = (name == self.map_data.start_hub.name)
+            is_goal = (name == self.map_data.end_hub.name)
+            z_type = str(getattr(zone, 'zone_type', '')).lower()
+            
+            # 1. Base Circle
+            pygame.draw.circle(self.screen, hub_color, cam_pos, radius)
+            
+            # 2. Outer Border (Ila kan Start/Goal, n-ghldouh w n-lownouh)
+            border_color = (255, 255, 255) # Default white border
+            border_thick = max(1, int(2 * self.camera.zoom))
+            
+            if is_start:
+                border_color = self.COLORS["green"]
+                border_thick = max(2, int(4 * self.camera.zoom))
+            elif is_goal:
+                border_color = self.COLORS["red"]
+                border_thick = max(2, int(4 * self.camera.zoom))
+                
+            pygame.draw.circle(self.screen, border_color, cam_pos, radius, border_thick)
+
+            # 3. DRAW ICONS (Geometry / Math)
+            if "blocked" in z_type:
+                # Icon Blocked: Kht 7mer dayz f L-wst (Slash /)
+                pygame.draw.line(self.screen, (255, 50, 50), 
+                                (cam_pos[0] - radius*0.7, cam_pos[1] + radius*0.7), 
+                                (cam_pos[0] + radius*0.7, cam_pos[1] - radius*0.7), 
+                                max(2, int(4 * self.camera.zoom)))
+                pygame.draw.circle(self.screen, (255, 50, 50), cam_pos, radius, max(1, int(2 * self.camera.zoom))) # Red inner ring
+                
+            elif "restricted" in z_type:
+                # Icon Restricted: Dwaera 7mra sghira l-dakhl
+                inner_r = max(2, int(radius * 0.4))
+                pygame.draw.circle(self.screen, (255, 50, 50), cam_pos, inner_r, max(2, int(3 * self.camera.zoom)))
+                
+            elif "priority" in z_type:
+                # Icon Priority: Dwaera Sfra wla Nqta m-dweya
+                inner_r = max(2, int(radius * 0.4))
+                pygame.draw.circle(self.screen, self.COLORS["yellow"], cam_pos, inner_r)
             
         # 2. Rssem L-Hubs (Circles)
         for name, base_pos in self.pixel_coords.items():
                 cam_pos = self.camera.apply(base_pos)
                 radius = max(5, int(20 * self.camera.zoom)) # L-Circle kay-kber w y-sgher
                     
-                pygame.draw.circle(self.screen, (50, 150, 255), cam_pos, radius)
                 pygame.draw.circle(self.screen, (255, 255, 255), cam_pos, radius, max(1, int(2 * self.camera.zoom)))
 
     def _draw_drones(self):
@@ -135,25 +201,68 @@ class Renderer2D:
         pass
 
     def _draw_ui(self):
-            self.screen.blit(self.legend_surface, (20, 20))
-            self.screen.blit(self.bottom_surface, (50, self.HEIGHT - 100)) 
-            
-            pygame.draw.rect(self.screen, (100, 150, 255), pygame.Rect(20, 20, 250, 500), width=2, border_radius=10)
-            pygame.draw.rect(self.screen, (150, 150, 5), pygame.Rect(50, self.HEIGHT - 100, self.WIDTH - 150, 80), width=2, border_radius=20)
-            
-            # 🌟 ZEDNA L-CONTROLS L-TE7T
-            title_text = self.main_font.render(f"Map: {sys.argv[1].split('/')[-1]}", True, (255, 255, 255))
-            turn_text = self.main_font.render(f"Turn: {self.current_turn} / {self.max_turns}", True, (100, 200, 255))
-            
-            # Ktebhoum f L-issr w L-wst
-            self.screen.blit(title_text, (70, self.HEIGHT - 75))
-            self.screen.blit(turn_text, (450, self.HEIGHT - 75))
+        self.screen.blit(self.legend_surface, (20, 20))
+        self.screen.blit(self.bottom_surface, (50, self.HEIGHT - 100)) 
+        
+        pygame.draw.rect(self.screen, (100, 150, 255), pygame.Rect(20, 20, 250, 400), width=2, border_radius=10)
+        pygame.draw.rect(self.screen, (150, 150, 5), pygame.Rect(50, self.HEIGHT - 100, self.WIDTH - 100, 80), width=2, border_radius=20)
+        
+        # 🌟 ZEDNA L-CONTROLS L-TE7T
+        title_text = self.main_font.render(f"Map: {sys.argv[1].split('/')[-1]}", True, (255, 255, 255))
+        turn_text = self.small_font.render(f"Turn: {self.current_turn} / {self.max_turns}", True, (100, 200, 255))
+        
+        # Ktebhoum f L-issr w L-wst
+        self.screen.blit(title_text, (60, self.HEIGHT - 85))
+        self.screen.blit(turn_text, (570, self.HEIGHT - 75))
 
-            # Controls f L-imin
-            controls = "[SPACE]: Pause  |  [->]: Next  |  [<-]: Prev  |  [Scroll]: Zoom  |  [Drag]: Pan"
-            controls_surf = self.small_font.render(controls, True, (200, 200, 200))
-            self.screen.blit(controls_surf, (700, self.HEIGHT - 77))
+        # Controls f L-imin
+        controls = "<SPACE>: Pause | < -> >: Next |  < <- >: Prev | <Scroll>: Zoom"
+        controls_surf = self.small_font.render(controls, True, (200, 200, 200))
+        self.screen.blit(controls_surf, (700, self.HEIGHT - 75))
+        leg_x = 35  # X Offset wst L-Panel
+        leg_y = 40  # Y Offset
+        
+        # Smiya d L-Legend
+        title_surf = self.main_font.render("Legend", True, (100, 200, 255))
+        my_login = self.small_font.render("made by skoulal", True, (150, 100, 220))
+        self.screen.blit(title_surf, (leg_x, leg_y))
+        self.screen.blit(my_login, (100, 375))
+        
+        legend_items = [
+            ("Start Hub", self.COLORS["green"], "circle"),
+            ("Goal Hub", self.COLORS["red"], "circle"),
+            ("Hub (Map color)", self.COLORS["default"], "circle"),
+            ("Connection Line", (100, 150, 255), "line"),
+            ("Priority zone", self.COLORS["yellow"], "priority"),
+            ("Blocked zone", (255, 50, 50), "blocked"),
+            ("Restricted zone", (255, 50, 50), "restricted")
+        ]
+        
+        y_offset = leg_y + 40
+        for text, color, icon_type in legend_items:
+            icon_center = (leg_x + 15, y_offset + 10)
+            
+            if icon_type == "circle":
+                pygame.draw.circle(self.screen, color, icon_center, 10)
+            elif icon_type == "line":
+                pygame.draw.line(self.screen, color, (leg_x, y_offset + 10), (leg_x + 30, y_offset + 10), 4)
+            elif icon_type in ["priority", "blocked", "restricted"]:
+                # N-rsmou L-Icon dyal L-Type bhal L-Map b-dabt (Black background with icon)
+                pygame.draw.circle(self.screen, self.COLORS["black"], icon_center, 10)
+                pygame.draw.circle(self.screen, (255,255,255), icon_center, 10, 1) # White border
+                if icon_type == "blocked":
+                    pygame.draw.line(self.screen, color, (icon_center[0]-7, icon_center[1]+7), (icon_center[0]+7, icon_center[1]-7), 2)
+                    pygame.draw.circle(self.screen, color, icon_center, 10, 1)
+                elif icon_type == "restricted":
+                    pygame.draw.circle(self.screen, color, icon_center, 4, 2)
+                elif icon_type == "priority":
+                    pygame.draw.circle(self.screen, color, icon_center, 4)
 
+            # 2. Rsem L-Kteba
+            text_surf = self.small_font.render(text, True, (220, 220, 220))
+            self.screen.blit(text_surf, (leg_x + 40, y_offset))
+            
+            y_offset += 35 # Hbet l-ster L-jay
     def run(self):
         clock = pygame.time.Clock()
         running = True
