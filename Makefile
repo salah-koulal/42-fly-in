@@ -27,7 +27,7 @@ all:
 
 $(VENV)/bin/activate: requirements.txt
 	@echo "$(CYAN)Creating virtual environment '$(VENV)' and installing dependencies...$(RESET)"
-	python3 -m venv $(VENV)
+	python3.10 -m venv $(VENV)
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 	@touch $(VENV)/bin/activate

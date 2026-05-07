@@ -24,7 +24,7 @@ def main():
             print("No path found! Drones are stuck.!")
             sys.exit(1)
         if args.viz:
-            print("🎨 Visualization Mode: ON (Coming soon...)")
+            print("Visualization Mode: ON (Coming soon...)")
             pass
         else:
             sim = Simulator(parsed_map)
