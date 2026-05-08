@@ -2,7 +2,6 @@ import os
 import warnings
 
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 import sys
 import pygame
@@ -32,7 +31,7 @@ class Camera:
             if event.button == 1: # Tleq L-Click
                 self.is_dragging = False
         elif event.type == pygame.MOUSEMOTION:
-            if self.is_dragging: # Ila knti wark w kat-7erek L-Mouse
+            if self.is_dragging:
                 dx = event.pos[0] - self.last_mouse_pos[0]
                 dy = event.pos[1] - self.last_mouse_pos[1]
                 # Kan-qsmou 3la zoom bach L-jerr y-bqa 1:1 wakha t-koun m-zomi
@@ -47,7 +46,7 @@ class Camera:
 
 class Renderer2D:
     def __init__(self, map_data, engine_history):
-        self.map_data = map_data # Fix 3
+        self.map_data = map_data 
         self.history = engine_history
         
         # State Variables
@@ -65,7 +64,7 @@ class Renderer2D:
         
         # ASSETS & COORDS INIT
         self._load_assets()
-        self._calculate_coord_mapping() # N-7sbou L-Math d L-Pixels merra we7da!
+        self._calculate_coord_mapping()
         self.COLORS = {
             "red": (255, 50, 50),
             "green": (50, 200, 50),
@@ -76,13 +75,16 @@ class Renderer2D:
             "gray": (150, 150, 150),
             "black": (40, 40, 40),
             "white": (240, 240, 240),
+            "gold": (239, 191, 4),
+            "magenta": (255, 0, 255),
+            "cyan": (0, 255, 255),
             "default": (150, 100, 250) 
         }
     # Fix 1: Indentation m-regla
     def _load_assets(self):
         try:
             # Kan-3tiwh L-Path dyal L-Fichier NICHAN
-            self.main_font = pygame.font.Font("assets/GODOFWAR.TTF", 32)
+            self.main_font = pygame.font.Font("assets/GODOFWAR.TTF", 28)
             self.small_font = pygame.font.Font("assets/GODOFWAR.TTF", 18)
         except Exception as e:
             print(f"Warning: Custom font not found. Using default. Error: {e}")
@@ -204,27 +206,25 @@ class Renderer2D:
         self.screen.blit(self.legend_surface, (20, 20))
         self.screen.blit(self.bottom_surface, (50, self.HEIGHT - 100)) 
         
-        pygame.draw.rect(self.screen, (100, 150, 255), pygame.Rect(20, 20, 250, 400), width=2, border_radius=10)
-        pygame.draw.rect(self.screen, (150, 150, 5), pygame.Rect(50, self.HEIGHT - 100, self.WIDTH - 100, 80), width=2, border_radius=20)
+        pygame.draw.rect(self.screen, (52, 173, 97), pygame.Rect(20, 20, 250, 400), width=2, border_radius=10)
+        pygame.draw.rect(self.screen, (52, 173, 97), pygame.Rect(50, self.HEIGHT - 100, self.WIDTH - 100, 80), width=2, border_radius=20)
+        map_name = sys.argv[1].split('/')[-1]
+        map_name = map_name.replace(".txt", "")
         
-        # 🌟 ZEDNA L-CONTROLS L-TE7T
-        title_text = self.main_font.render(f"Map: {sys.argv[1].split('/')[-1]}", True, (255, 255, 255))
-        turn_text = self.small_font.render(f"Turn: {self.current_turn} / {self.max_turns}", True, (100, 200, 255))
+        title_text = self.main_font.render(f"Map: {map_name}", True, (255, 255, 255))
+        turn_text = self.small_font.render(f"Turn: {self.current_turn} / {self.max_turns}", True, (61, 184, 127))
         
-        # Ktebhoum f L-issr w L-wst
         self.screen.blit(title_text, (60, self.HEIGHT - 85))
         self.screen.blit(turn_text, (570, self.HEIGHT - 75))
 
-        # Controls f L-imin
-        controls = "<SPACE>: Pause | < -> >: Next |  < <- >: Prev | <Scroll>: Zoom"
+        controls = "<SPACE> : Pause | < -> >: Next |  < <- >: Prev | <Scroll>: Zoom"
         controls_surf = self.small_font.render(controls, True, (200, 200, 200))
         self.screen.blit(controls_surf, (700, self.HEIGHT - 75))
         leg_x = 35  # X Offset wst L-Panel
         leg_y = 40  # Y Offset
         
-        # Smiya d L-Legend
-        title_surf = self.main_font.render("Legend", True, (100, 200, 255))
-        my_login = self.small_font.render("made by skoulal", True, (150, 100, 220))
+        title_surf = self.main_font.render("Legend", True,  (61, 184, 127))
+        my_login = self.small_font.render("made by skoulal", True, (61, 184, 127))
         self.screen.blit(title_surf, (leg_x, leg_y))
         self.screen.blit(my_login, (100, 375))
         
@@ -268,8 +268,8 @@ class Renderer2D:
         running = True
         
         while running:
-            # 1. Events
             for event in pygame.event.get():
+                # print(event)
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     running = False
                 self.camera.handle_event(event)

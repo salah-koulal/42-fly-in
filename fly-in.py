@@ -2,7 +2,6 @@ import argparse
 import sys
 from src.ft_parser import MapParser
 from src.algorithms.path_finder import PathFinder
-from src.models import ZoneType
 from src.ft_engine import Simulator
 from src.ft_2D_renderer import Renderer2D
 def main():

@@ -9,15 +9,14 @@ if __name__ == "__main__":
     try:
         parsed_map = parser.file_parsing("./maps/easy/01_linear_path.txt")
         
-        print(f"\n🗺️ L-GPS (Pathfinder) is looking for the dest ! '{parsed_map.start_hub.name}' l '{parsed_map.end_hub.name}'...")
+        print(f"\nL-GPS (Pathfinder) is starting from the goal and spread over all zones ! '{parsed_map.start_hub.name}' l '{parsed_map.end_hub.name}'...")
         pf = PathFinder(parsed_map)
-        # shortest_path = pf.dijkstra(parsed_map.start_hub.name, parsed_map.end_hub.name)
         distances = pf.distances
         
         if distances:
-            print(f"\n✅ we found all distances that are faraway from goal:  {distances}")
+            print(f"we found all distances that are faraway from goal:  {distances}")
         else:
-            print("\n❌ no distances there is a problem in reverse dijkastra")
+            print("\nno distances there is a problem in reverse dijkastra")
             
     except Exception as e:
-        print(f"❌ ERROR: {e}")
+        print(f"ERROR: {e}")
