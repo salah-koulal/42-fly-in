@@ -16,7 +16,7 @@ YELLOW      =   \033[0;33m
 RESET       =   \033[0m
 
 all:
-	@echo "$(CYAN)🚀 Fly-in Makefile Usage:$(RESET)"
+	@echo "$(CYAN)Fly-in Makefile Usage:$(RESET)"
 	@echo "  $(YELLOW)make install$(RESET)   - Install dependencies"
 	@echo "  $(YELLOW)make run$(RESET)       - Run with default map ($(MAP))"
 	@echo "  $(YELLOW)make run MAP=x$(RESET) - Run specific map (e.g., make run MAP=downloads/level1.txt)"

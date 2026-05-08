@@ -1,5 +1,4 @@
 import os
-import warnings
 
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
@@ -116,8 +115,10 @@ class Renderer2D:
         grid_width = max_x - min_x
         grid_height = max_y - min_y
         
-        avail_width = self.WIDTH - 400  
+        avail_width = self.WIDTH - 500
+        print(f"########### {avail_width}")
         avail_height = self.HEIGHT - 300 
+        print(f"########### {avail_height}")
         scale_x = avail_width / grid_width if grid_width > 0 else avail_width
         scale_y = avail_height / grid_height if grid_height > 0 else avail_height
         scale = min(scale_x, scale_y)

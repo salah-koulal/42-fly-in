@@ -1,0 +1,6 @@
+#!/Users/user/Desktop/Programming/1337/python_projects/fly-in/fly-in/bin/python3.10
+import sys
+from pylint import _run_pylint_config
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(_run_pylint_config())
