@@ -4,6 +4,7 @@ from src.models.ft_drone import Drone
 from src.ft_parser import ParsedMap
 from src.algorithms.path_finder import PathFinder
 
+
 class Simulator:
     def __init__(self, parsed_map: ParsedMap):
         self.map_data = parsed_map
@@ -145,9 +146,9 @@ class Simulator:
 
     def run_all(self):
         end_type = str(getattr(self.end_zone, 'zone_type', '')).lower()
-
-        if "blocked" in end_type:
-            print("Error: Map is unsolvable! Goal is BLOCKED.")
+        start_type = str(getattr(self.start_zone, 'zone_type', '')).lower()
+        if "blocked" in end_type or "blocked" in start_type:
+            print("Error: Map is unsolvable!")
             sys.exit()
         while not self._is_finished():
             self.turn_count += 1

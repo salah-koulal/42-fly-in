@@ -116,9 +116,7 @@ class Renderer2D:
         grid_height = max_y - min_y
         
         avail_width = self.WIDTH - 500
-        print(f"########### {avail_width}")
         avail_height = self.HEIGHT - 300 
-        print(f"########### {avail_height}")
         scale_x = avail_width / grid_width if grid_width > 0 else avail_width
         scale_y = avail_height / grid_height if grid_height > 0 else avail_height
         scale = min(scale_x, scale_y)
@@ -133,7 +131,6 @@ class Renderer2D:
             self.pixel_coords[name] = (int(px), int(py))
 
     def _draw_map(self):
-        # 1. Rssem T-triqat (Connections)
         for conn in self.map_data.connections:
             pos1 = self.camera.apply(self.pixel_coords[conn.zone1.name])
             pos2 = self.camera.apply(self.pixel_coords[conn.zone2.name])
@@ -148,7 +145,6 @@ class Renderer2D:
             zone = self.map_data.zones[name]
             
             # --- COLOR MAPPING ---
-            # (Mola7ada: T2kked kifach m-ssmiha f parser dyalk. Ghaliban getattr(zone, 'color'))
             z_color_str = str(getattr(zone, 'color', 'default')).lower()
             hub_color = self.COLORS.get(z_color_str, self.COLORS["default"])
             
@@ -160,7 +156,7 @@ class Renderer2D:
             # 1. Base Circle
             pygame.draw.circle(self.screen, hub_color, cam_pos, radius)
             
-            # 2. Outer Border (Ila kan Start/Goal, n-ghldouh w n-lownouh)
+
             border_color = (255, 255, 255) # Default white border
             border_thick = max(1, int(2 * self.camera.zoom))
             
@@ -183,12 +179,10 @@ class Renderer2D:
                 pygame.draw.circle(self.screen, (255, 50, 50), cam_pos, radius, max(1, int(2 * self.camera.zoom))) # Red inner ring
                 
             elif "restricted" in z_type:
-                # Icon Restricted: Dwaera 7mra sghira l-dakhl
                 inner_r = max(2, int(radius * 0.4))
                 pygame.draw.circle(self.screen, (255, 50, 50), cam_pos, inner_r, max(2, int(3 * self.camera.zoom)))
                 
             elif "priority" in z_type:
-                # Icon Priority: Dwaera Sfra wla Nqta m-dweya
                 inner_r = max(2, int(radius * 0.4))
                 pygame.draw.circle(self.screen, self.COLORS["yellow"], cam_pos, inner_r)
             
@@ -200,7 +194,7 @@ class Renderer2D:
                 pygame.draw.circle(self.screen, (255, 255, 255), cam_pos, radius, max(1, int(2 * self.camera.zoom)))
 
     def _draw_drones(self):
-        # Dba khawya, hta n-bniw L-Animation
+        #TODO: GHDA inchaalah ghadi nbda fiha
         pass
 
     def _draw_ui(self):
@@ -218,7 +212,7 @@ class Renderer2D:
         self.screen.blit(title_text, (60, self.HEIGHT - 85))
         self.screen.blit(turn_text, (570, self.HEIGHT - 75))
 
-        controls = "<SPACE> : Pause | < -> >: Next |  < <- >: Prev | <Scroll>: Zoom"
+        controls = " SPACE : Pause | ->: Next |  <- : Prev | Scroll: Zoom"
         controls_surf = self.small_font.render(controls, True, (200, 200, 200))
         self.screen.blit(controls_surf, (700, self.HEIGHT - 75))
         leg_x = 35  # X Offset wst L-Panel
@@ -231,7 +225,7 @@ class Renderer2D:
         
         legend_items = [
             ("Start Hub", self.COLORS["green"], "circle"),
-            ("Goal Hub", self.COLORS["red"], "circle"),
+            # ("Goal Hub", self.COLORS["red"], "circle"),
             ("Hub (Map color)", self.COLORS["default"], "circle"),
             ("Connection Line", (100, 150, 255), "line"),
             ("Priority zone", self.COLORS["yellow"], "priority"),

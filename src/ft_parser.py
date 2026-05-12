@@ -161,6 +161,8 @@ class MapParser:
                     raise ValueError(f"Line {n_line}: x and y must be valid integers")
                 
                 metadata_str = " ".join(parts[3:]) if len(parts) > 3 else None
+                meta_dict = self._parse_metadata(metadata_str, n_line)
+
                 max_drones_str = meta_dict.get("max_drones","1")
                 try:
                     max_drones = int(max_drones_str)
@@ -170,12 +172,12 @@ class MapParser:
                     raise ValueError(f"Line {n_line}: max_drones must >= 0")
                 color = meta_dict.get("color", None)
                 z_type_str = meta_dict.get("zone", "normal")
+                
                 try:
                     zone_type = ZoneType(z_type_str)
                 except ValueError:
                     raise ValueError(f"Line {n_line}: The zone type is unknown <'{z_type_str}'> ")
                 end_hub = Zone(name, x,y, zone_type=zone_type, color=color)
-                
                 self.zones[name] = end_hub
                 continue
                 

@@ -5,11 +5,11 @@ PYTHON      =   $(VENV)/bin/python3
 PIP         =   $(VENV)/bin/pip3
 MAIN        =   fly-in.py
 
-# (Default values)
+
 MAPS_DIR         =  maps
 VIZ         ?=
 DEF_MAP = $(MAPS_DIR)/easy/01_linear_path.txt
-# Colors
+
 GREEN       =   \033[0;32m
 CYAN        =   \033[0;36m
 YELLOW      =   \033[0;33m
