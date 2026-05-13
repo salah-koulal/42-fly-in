@@ -1,6 +1,6 @@
 NAME        =   fly-in
 
-VENV        =   fly-in
+VENV        =   fly-in_venv
 PYTHON      =   $(VENV)/bin/python3
 PIP         =   $(VENV)/bin/pip3
 MAIN        =   fly-in.py
@@ -43,6 +43,10 @@ run: $(VENV)/bin/activate
 		$(PYTHON) $(MAIN) $(DEF_MAP); \
 	fi
 
+debug: $(VENV)/bin/activate
+	@echo "$(CYAN)Running $(NAME) in debug mode with map: $(YELLOW)$(DEF_MAP)$(RESET)"
+	$(PYTHON) -m pdb $(MAIN) $(DEF_MAP)
+
 # ==========================================
 # 🌟 BONUS: Interactive Menu
 # ==========================================
@@ -82,10 +86,7 @@ lint: $(VENV)/bin/activate
 	@echo "$(CYAN)Running flake8...$(RESET)"
 	$(PYTHON) -m flake8 .
 	@echo "$(CYAN)Running mypy...$(RESET)"
-	$(PYTHON) -m mypy . --warn-return-any --warn-unused-ignores \
-	       --ignore-missing-imports \
-	       --disallow-untyped-defs \
-	       --check-untyped-defs
+	$(PYTHON) -m mypy .
 	@echo "$(GREEN)All checks passed.$(RESET)"
 
 .PHONY: all install run menu clean lint

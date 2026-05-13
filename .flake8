@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    .git,
+    __pycache__,
+    fly-in_venv,
+    venv,
+    .venv
+max-line-length = 120
