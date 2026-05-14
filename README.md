@@ -83,7 +83,7 @@ To prevent deadlocks and manage capacity limits, the engine uses a turn-based **
 
 The project includes a highly polished Pygame Visualizer (`ft_2D_renderer.py`) designed to enhance user experience and provide clear debugging feedback for massive maps.
 
-* **God Mode Camera (Pan & Zoom):** Instead of rigid, static rendering, the visualizer features a virtual camera system. Users can **Click & Drag** to pan around massive environments and use the **Mouse Wheel** to zoom in and out smoothly.
+* **Free Mode Camera (Pan & Zoom):** Instead of rigid, static rendering, the visualizer features a virtual camera system. Users can **Click & Drag** to pan around massive environments and use the **Mouse Wheel** to zoom in and out smoothly.
 * **LERP Animation (Smooth Interpolation):** Drones do not teleport between nodes. Their movements are calculated using Linear Interpolation (LERP) based on the frame rate, providing smooth, realistic flight paths between hubs.
 * **Dynamic Styling & Legend:** The renderer dynamically extracts colors from the parsed map (e.g., `[color=red]`). Zone types are mathematically drawn using custom geometry (e.g., a red slash for `blocked`, a yellow center for `priority`) and are documented in a real-time, transparent UI Legend.
 * **Interactive Controls:** Users can play/pause the simulation using `[SPACE]`, and step through the simulation turn-by-turn using the `[LEFT]` and `[RIGHT]` arrow keys, allowing for granular inspection of traffic flow and bottleneck resolution.

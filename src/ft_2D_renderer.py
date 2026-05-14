@@ -122,7 +122,7 @@ class Renderer2D:
         grid_width = max_x - min_x
         grid_height = max_y - min_y
 
-        avail_width = self.WIDTH - 250
+        avail_width = self.WIDTH - 350
         avail_height = self.HEIGHT - 300
         scale_x = (
             avail_width / grid_width if grid_width > 0 else avail_width
@@ -327,7 +327,7 @@ class Renderer2D:
         legend_items = [
             ("Start Hub", self.COLORS["green"], "circle"),
             ("Hub (Map color)", self.COLORS["default"], "circle"),
-            ("Connection Line", (100, 150, 255), "line"),
+            ("Connection Line", (100, 200, 155), "line"),
             ("Priority zone", self.COLORS["yellow"], "priority"),
             ("Blocked zone", (255, 50, 50), "blocked"),
             ("Restricted zone", (255, 50, 50), "restricted"),
@@ -386,6 +386,7 @@ class Renderer2D:
         self.hub_pause_frames = 0
         while running:
             for event in pygame.event.get():
+                # print(event)
                 if event.type == pygame.QUIT or (
                     event.type == pygame.KEYDOWN and event.key == pygame.K_q
                 ):

@@ -96,14 +96,12 @@ class Simulator:
             for next_name in best_neighbors:
                 next_zone = self.map_data.zones[next_name]
 
-                # FILTER 1: U-Turn Check
                 dist_next = self.pf.get_distance(next_name)
                 dist_curr = self.pf.get_distance(current_name)
 
                 if dist_next >= dist_curr:
                     continue
 
-                # FILTER 2: Zone Capacity Check
                 if next_name.strip() != self.end_zone.name.strip():
                     max_cap = getattr(next_zone, "max_drones", 1)
                     if max_cap <= 0:
@@ -111,7 +109,6 @@ class Simulator:
                     if zone_occupancy.get(next_name, 0) >= max_cap:
                         continue
 
-                # FILTER 3: Link Capacity Check
                 conn_name = self._get_connection_name(current_name, next_name)
                 conn_obj = next(
                     (
@@ -162,7 +159,7 @@ class Simulator:
         """Runs the simulation until completion or deadlocked."""
         end_type = str(getattr(self.end_zone, "zone_type", "")).lower()
         start_type = str(getattr(self.start_zone, "zone_type", "")).lower()
-        if "blocked" in end_type or "blocked" in start_type:
+        if "blocked" in end_type :
             print("Error: Map is unsolvable!")
             sys.exit(1)
         while not self._is_finished():
