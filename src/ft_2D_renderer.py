@@ -122,8 +122,8 @@ class Renderer2D:
         grid_width = max_x - min_x
         grid_height = max_y - min_y
 
-        avail_width = self.WIDTH - 350
-        avail_height = self.HEIGHT - 200
+        avail_width = self.WIDTH - 250
+        avail_height = self.HEIGHT - 300
         scale_x = (
             avail_width / grid_width if grid_width > 0 else avail_width
         )
@@ -132,8 +132,8 @@ class Renderer2D:
         )
         scale = min(scale_x, scale_y)
 
-        offset_x = 300 + (avail_width - (grid_width * scale)) / 2
-        offset_y = 50 + (avail_height - (grid_height * scale)) / 2
+        offset_x = (self.WIDTH - (grid_width * scale)) / 2
+        offset_y = (self.HEIGHT - (grid_height * scale)) / 2
 
         self.pixel_coords = {}
         for name, zone in self.map_data.zones.items():
@@ -173,7 +173,7 @@ class Renderer2D:
 
         for name, base_pos in self.pixel_coords.items():
             cam_pos = self.camera.apply(base_pos)
-            radius = max(5, int(12 * self.camera.zoom))
+            radius = max(5, int(20 * self.camera.zoom))
             zone = self.map_data.zones[name]
 
             z_color_str = str(getattr(zone, "color", "default")).lower()
@@ -229,7 +229,7 @@ class Renderer2D:
 
         for name, base_pos in self.pixel_coords.items():
             cam_pos = self.camera.apply(base_pos)
-            radius = max(5, int(12 * self.camera.zoom))
+            radius = max(5, int(20 * self.camera.zoom))
 
             pygame.draw.circle(
                 self.screen,
@@ -262,7 +262,7 @@ class Renderer2D:
             cam_pos = self.camera.apply((cur_x, cur_y))
 
             if hasattr(self, "drone_image"):
-                size = max(10, int(20 * self.camera.zoom))
+                size = max(10, int(30 * self.camera.zoom))
                 scaled_drone = pygame.transform.scale(
                     self.drone_image, (size, size)
                 )
@@ -381,7 +381,7 @@ class Renderer2D:
         clock = pygame.time.Clock()
         running = True
         self.anim_progress = 0.0
-        self.anim_speed = 0.02
+        self.anim_speed = 0.03
         self.is_paused = True
         self.hub_pause_frames = 0
         while running:

@@ -18,7 +18,6 @@ class ParsedMap:
 
 class MapParser:
     """Parser for input files."""
-
     def __init__(self) -> None:
         """Initialize the parser."""
         self.zones: Dict[str, Zone] = {}
@@ -95,7 +94,6 @@ class MapParser:
             if not line:
                 continue
 
-            # 1. parsing the line of nb_drones must be the 1st line
             if not self.nb_drones_parsed:
                 if line.startswith("nb_drones:"):
                     drones_str = line.split(":")[1].strip()
@@ -117,7 +115,6 @@ class MapParser:
                         f"Line {n_line}: the first line must be nb_drones 'nb_drones: <valid_integer>'"
                     )
 
-            # 2. start_hub parsing
             elif line.startswith("start_hub:"):
                 if start_hub is not None:
                     raise ValueError(
@@ -131,7 +128,6 @@ class MapParser:
                     )
 
                 name = parts[0]
-                # Zone name validation
                 if "-" in name:
                     raise ValueError(
                         f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'"
@@ -175,7 +171,6 @@ class MapParser:
                 self.zones[name] = start_hub
                 continue
 
-            # 3. end_hub parsing
             elif line.startswith("end_hub:"):
                 if end_hub is not None:
                     raise ValueError(
@@ -296,7 +291,6 @@ class MapParser:
                 self.zones[name] = hub_zone
                 continue
 
-            # 5. parsing connections
             elif line.startswith("connection:"):
                 content = line.replace("connection:", "").strip()
                 parts = content.split()
@@ -326,7 +320,6 @@ class MapParser:
                         f"Line {n_line}: The connection {zones_str} already seen"
                     )
 
-                # Parse connection metadata
                 metadata_str = " ".join(parts[1:]) if len(parts) > 1 else None
                 meta_dict = self._parse_metadata(metadata_str, n_line)
 

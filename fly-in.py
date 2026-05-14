@@ -17,9 +17,12 @@ def main():
     parser_args.add_argument(
         "--viz", action="store_true", help="Enable Pygame visualization"
     )
+    parser_args.add_argument("--capacity_info", action="store_true")
+
     args = parser_args.parse_args()
 
     try:
+
         parser = MapParser()
         parsed_map = parser.file_parsing(args.map_file)
 
@@ -34,6 +37,15 @@ def main():
         if args.viz:
             renderer = Renderer2D(parsed_map, engine_history)
             renderer.run()
+        i = 0
+        if args.capacity_info:
+            for name in parsed_map.zones:
+                if i >= len(parsed_map.connections):
+                    break
+                print(f"zone {parsed_map.zones[name].name} : {parsed_map.zones[name].max_drones} "
+                      f" | connection {parsed_map.connections[i].zone1.name}-{parsed_map.connections[i].zone2.name} "
+                      f" | capacity used: {parsed_map.connections[i].max_link_capacity}")
+                i += 1
         else:
             sim.run_all()
 

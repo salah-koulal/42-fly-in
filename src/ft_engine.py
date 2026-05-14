@@ -164,7 +164,7 @@ class Simulator:
         start_type = str(getattr(self.start_zone, "zone_type", "")).lower()
         if "blocked" in end_type or "blocked" in start_type:
             print("Error: Map is unsolvable!")
-            sys.exit()
+            sys.exit(1)
         while not self._is_finished():
             self.turn_count += 1
             moves = self.run_turn()
