@@ -27,6 +27,7 @@ def main():
         parsed_map = parser.file_parsing(args.map_file)
 
         pf = PathFinder(parsed_map)
+        print(pf.distances)
         start_name = parsed_map.start_hub.name
         sim = Simulator(parsed_map)
         sim.run_all()
@@ -42,9 +43,14 @@ def main():
             for name in parsed_map.zones:
                 if i >= len(parsed_map.connections):
                     break
-                print(f"zone {parsed_map.zones[name].name} : {parsed_map.zones[name].max_drones} "
-                      f" | connection {parsed_map.connections[i].zone1.name}-{parsed_map.connections[i].zone2.name} "
-                      f" | capacity used: {parsed_map.connections[i].max_link_capacity}")
+                print(
+                    f"zone {parsed_map.zones[name].name} : "
+                    f"{parsed_map.zones[name].max_drones} "
+                    f" | connection {parsed_map.connections[i].zone1.name}-"
+                    f"{parsed_map.connections[i].zone2.name} "
+                    f" | capacity used: "
+                    f"{parsed_map.connections[i].max_link_capacity}"
+                )
                 i += 1
 
     except Exception as e:

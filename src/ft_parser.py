@@ -18,6 +18,7 @@ class ParsedMap:
 
 class MapParser:
     """Parser for input files."""
+
     def __init__(self) -> None:
         """Initialize the parser."""
         self.zones: Dict[str, Zone] = {}
@@ -40,7 +41,8 @@ class MapParser:
         metadata_str = metadata_str.strip()
         if not (metadata_str.startswith("[") and metadata_str.endswith("]")):
             raise ValueError(
-                f"Line {n_line}: Metadata must be between [...] -> '{metadata_str}'"
+                f"Line {n_line}: Metadata must be between [...] -> "
+                f"'{metadata_str}'"
             )
 
         content = metadata_str[1:-1].strip()
@@ -53,13 +55,15 @@ class MapParser:
         for item in items:
             if "=" not in item:
                 raise ValueError(
-                    f"Line {n_line}: Metadata syntax error in '{item}', must be key=value"
+                    f"Line {n_line}: Metadata syntax error in '{item}', "
+                    "must be key=value"
                 )
 
             key, value = item.split("=", 1)
             if key not in required_metadata:
                 raise ValueError(
-                    f"Line {n_line}: Not found in required metadata <max_drones, color, zone, max_link_capacity>"
+                    f"Line {n_line}: Not found in required metadata "
+                    "<max_drones, color, zone, max_link_capacity>"
                 )
             if key in parsed_data:
                 raise ValueError(
@@ -112,7 +116,8 @@ class MapParser:
                     continue
                 else:
                     raise ValueError(
-                        f"Line {n_line}: the first line must be nb_drones 'nb_drones: <valid_integer>'"
+                        f"Line {n_line}: the first line must be nb_drones "
+                        "'nb_drones: <valid_integer>'"
                     )
 
             elif line.startswith("start_hub:"):
@@ -130,11 +135,13 @@ class MapParser:
                 name = parts[0]
                 if "-" in name:
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot contain hyphens "
+                        f"('-'), got '{name}'"
                     )
                 if name.endswith("-") or name.startswith("-"):
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot start or end "
+                        f"with hyphens ('-'), got '{name}'"
                     )
                 if name in self.zones:
                     raise ValueError(
@@ -158,8 +165,16 @@ class MapParser:
                     zone_type = ZoneType(z_type_str)
                 except ValueError:
                     raise ValueError(
-                        f"Line {n_line}: The zone type is unknown <'{z_type_str}'> "
+                        f"Line {n_line}: The zone type is unknown "
+                        f"<'{z_type_str}'> "
                     )
+                max_drones_str = meta_dict.get("max_drones", "1")
+                try:
+                    max_drones = int(max_drones_str)
+                    if max_drones <= 0:
+                        raise ValueError()
+                except ValueError:
+                    raise ValueError(f"Line {n_line}: max_drones must >= 0")
                 start_hub = Zone(name, x, y, zone_type=zone_type, color=color)
                 self.zones[name] = start_hub
                 continue
@@ -179,11 +194,13 @@ class MapParser:
                 name = parts[0]
                 if "-" in name:
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot contain hyphens "
+                        f"('-'), got '{name}'"
                     )
                 if name.endswith("-") or name.startswith("-"):
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot start or end "
+                        f"with hyphens ('-'), got '{name}'"
                     )
                 if name in self.zones:
                     raise ValueError(
@@ -208,7 +225,8 @@ class MapParser:
                     zone_type = ZoneType(z_type_str)
                 except ValueError:
                     raise ValueError(
-                        f"Line {n_line}: The zone type is unknown <'{z_type_str}'> "
+                        f"Line {n_line}: The zone type is unknown "
+                        f"<'{z_type_str}'> "
                     )
                 end_hub = Zone(name, x, y, zone_type=zone_type, color=color)
                 self.zones[name] = end_hub
@@ -225,11 +243,13 @@ class MapParser:
                 name = parts[0]
                 if "-" in name:
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot contain hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot contain hyphens "
+                        f"('-'), got '{name}'"
                     )
                 if name.endswith("-") or name.startswith("-"):
                     raise ValueError(
-                        f"Line {n_line}: zone names cannot start or end with hyphens ('-'), got '{name}'"
+                        f"Line {n_line}: zone names cannot start or end "
+                        f"with hyphens ('-'), got '{name}'"
                     )
                 if name in self.zones:
                     raise ValueError(
@@ -252,7 +272,8 @@ class MapParser:
                     zone_type = ZoneType(z_type_str)
                 except ValueError:
                     raise ValueError(
-                        f"Line {n_line}: The zone type is unknown <'{z_type_str}'> "
+                        f"Line {n_line}: The zone type is unknown "
+                        f"<'{z_type_str}'> "
                     )
 
                 max_drones_str = meta_dict.get("max_drones", "1")
@@ -283,7 +304,8 @@ class MapParser:
                 zones_str = parts[0]
                 if "-" not in zones_str:
                     raise ValueError(
-                        f"Line {n_line}: The connection must be linked by (-) <a-b>"
+                        f"Line {n_line}: The connection must be linked "
+                        "by (-) <a-b>"
                     )
 
                 zone1_name, zone2_name = zones_str.split("-", 1)
@@ -302,7 +324,8 @@ class MapParser:
                 )
                 if normalized_conn in self.seen_connections:
                     raise ValueError(
-                        f"Line {n_line}: The connection {zones_str} already seen"
+                        f"Line {n_line}: The connection {zones_str} "
+                        "already seen"
                     )
 
                 metadata_str = " ".join(parts[1:]) if len(parts) > 1 else None
@@ -354,7 +377,8 @@ class MapParser:
                 other_name = seen_cords[coords]
                 raise ValueError(
                     f"Duplicate Coordinates! the zone {zone.name} and"
-                    f" {other_name} are in the same (x, y) <{zone.x}, {zone.y}>"
+                    f" {other_name} are in the same (x, y) "
+                    f"<{zone.x}, {zone.y}>"
                 )
 
             seen_cords[coords] = name

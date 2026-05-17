@@ -114,7 +114,8 @@ class Renderer2D:
             self.bg_image.fill((30, 35, 45))
 
     def _calculate_coord_mapping(self):
-        """Calculates scaling and offset to map world coordinates to screen pixels."""
+        """Calculates scaling and offset to map world coordinates
+        to screen pixels."""
         xs = [zone.x for zone in self.map_data.zones.values()]
         ys = [zone.y for zone in self.map_data.zones.values()]
         min_x, max_x = min(xs), max(xs)

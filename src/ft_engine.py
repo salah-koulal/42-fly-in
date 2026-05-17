@@ -49,7 +49,6 @@ class Simulator:
 
         zone_occupancy = {name: 0 for name in self.map_data.zones.keys()}
 
-        # this loop is for checking if there is a drone is traveling
         for drone in self.drones:
             if drone.is_traveling and drone.destination_zone:
                 zone_occupancy[drone.destination_zone.name] += 1
@@ -61,7 +60,6 @@ class Simulator:
             for c in self.map_data.connections
         }
 
-        # this loop is for moving the drones that are in-transit
         for drone in self.drones:
             if drone.is_traveling:
                 if drone.advance_turn():
@@ -90,7 +88,8 @@ class Simulator:
             best_neighbors = list(drone.current_zone.neighbors.keys())
             best_neighbors.sort(key=lambda n: (
                 self.pf.get_distance(n),
-                zone_occupancy.get(n, 0) - getattr(self.map_data.zones[n], "max_drones", 1)
+                zone_occupancy.get(n, 0) -
+                getattr(self.map_data.zones[n], "max_drones", 1)
             ))
 
             for next_name in best_neighbors:

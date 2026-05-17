@@ -29,12 +29,15 @@ def main():
         if result.returncode != 0:
             passed_tests += 1
             # Get the first line of stderr or stdout as the error message
-            err_msg = (result.stderr.strip() or result.stdout.strip()).splitlines()
+            err_output = result.stderr.strip() or result.stdout.strip()
+            err_msg = err_output.splitlines()
             err_line = err_msg[-1] if err_msg else "Unknown Error"
             print(f"✅ [PASS] {file_name} -> Rejected successfully: {err_line}")
         else:
-            failed_tests.append((file_name, "Parsed and executed successfully without error!"))
-            print(f"❌ [FAIL] {file_name} -> Did not throw an error (Exit code 0)!")
+            failed_tests.append(
+                (file_name, "Parsed and executed successfully without error!")
+            )
+            print(f"❌ [FAIL] {file_name} -> Did not throw an error (Exit 0)!")
 
     print("-" * 50)
     print(f"Results: {passed_tests}/{len(error_maps)} tests passed.")
