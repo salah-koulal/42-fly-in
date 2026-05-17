@@ -160,14 +160,7 @@ class MapParser:
                     raise ValueError(
                         f"Line {n_line}: The zone type is unknown <'{z_type_str}'> "
                     )
-                max_drones_str = meta_dict.get("max_drones", str(nb_drones))
-                try:
-                    max_drones = int(max_drones_str)
-                    if max_drones <= 0:
-                        raise ValueError()
-                except ValueError:
-                    raise ValueError(f"Line {n_line}: max_drones must >= 0")
-                start_hub = Zone(name, x, y, zone_type=zone_type, max_drones=max_drones, color=color)
+                start_hub = Zone(name, x, y, zone_type=zone_type, color=color)
                 self.zones[name] = start_hub
                 continue
 
@@ -208,13 +201,6 @@ class MapParser:
                 metadata_str = " ".join(parts[3:]) if len(parts) > 3 else None
                 meta_dict = self._parse_metadata(metadata_str, n_line)
 
-                max_drones_str = meta_dict.get("max_drones", str(nb_drones))
-                try:
-                    max_drones = int(max_drones_str)
-                    if max_drones <= 0:
-                        raise ValueError()
-                except ValueError:
-                    raise ValueError(f"Line {n_line}: max_drones must >= 0")
                 color = meta_dict.get("color", None)
                 z_type_str = meta_dict.get("zone", "normal")
 
@@ -224,11 +210,10 @@ class MapParser:
                     raise ValueError(
                         f"Line {n_line}: The zone type is unknown <'{z_type_str}'> "
                     )
-                end_hub = Zone(name, x, y, zone_type=zone_type, max_drones=max_drones, color=color)
+                end_hub = Zone(name, x, y, zone_type=zone_type, color=color)
                 self.zones[name] = end_hub
                 continue
 
-            # 4. parsing other hubs
             elif line.startswith("hub:"):
                 content = line.replace("hub:", "").strip()
                 parts = content.split()
@@ -359,14 +344,6 @@ class MapParser:
         if start_hub.x == end_hub.x and start_hub.y == end_hub.y:
             raise ValueError(
                 "The start_hub should be different than the end_hub"
-            )
-        if start_hub.max_drones < nb_drones:
-            raise ValueError(
-                "The number of drones cannot fit the start_zone at the start"
-            )
-        if end_hub.max_drones < nb_drones:
-            raise ValueError(
-                "The number of drones cannot fit the end_zone at the end"
             )
 
         seen_cords: Dict[tuple[int, int], str] = {}

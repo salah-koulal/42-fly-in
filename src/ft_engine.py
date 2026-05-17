@@ -158,8 +158,7 @@ class Simulator:
     def run_all(self):
         """Runs the simulation until completion or deadlocked."""
         end_type = str(getattr(self.end_zone, "zone_type", "")).lower()
-        start_type = str(getattr(self.start_zone, "zone_type", "")).lower()
-        if "blocked" in end_type :
+        if "blocked" in end_type:
             print("Error: Map is unsolvable!")
             sys.exit(1)
         while not self._is_finished():

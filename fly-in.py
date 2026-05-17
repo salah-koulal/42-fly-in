@@ -46,8 +46,6 @@ def main():
                       f" | connection {parsed_map.connections[i].zone1.name}-{parsed_map.connections[i].zone2.name} "
                       f" | capacity used: {parsed_map.connections[i].max_link_capacity}")
                 i += 1
-        else:
-            sim.run_all()
 
     except Exception as e:
         print(f"Error: {e}")
