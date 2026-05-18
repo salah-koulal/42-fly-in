@@ -1,3 +1,5 @@
+"""Provides path finding algorithms for routing drones."""
+
 import heapq
 from typing import Dict
 from src.models.ft_zone import ZoneType
@@ -5,18 +7,35 @@ from src.ft_parser import ParsedMap
 
 
 class PathFinder:
-    """Calculates shortest paths from all zones to the end zone."""
+    """Calculates shortest paths from all zones to the end zone.
+
+    Attributes:
+        map (ParsedMap): The parsed map data.
+        end_name (str): The name of the destination zone.
+        distances (Dict[str, float]): A dictionary mapping zone names to their
+            computed distance to the end zone.
+    """
 
     def __init__(self, parsed_map: ParsedMap):
-        """Initializes the PathFinder and computes initial distances."""
+        """Initializes the PathFinder and computes initial distances.
+
+        Args:
+            parsed_map (ParsedMap): The parsed map data.
+        """
         self.map = parsed_map
         self.end_name = parsed_map.end_hub.name
 
         self.distances: Dict[str, float] = self._compute_reverse_distances()
 
     def _compute_reverse_distances(self) -> Dict[str, float]:
-        """Computes shortest path distances from the destination
-        to all other zones using Dijkstra."""
+        """Computes shortest path distances from the destination to all zones.
+
+        Uses Dijkstra's algorithm to calculate the distance from the end zone
+        to every other zone in the map.
+
+        Returns:
+            Dict[str, float]: Dictionary mapping zone names to distances.
+        """
         distances = {name: float("inf") for name in self.map.zones}
         distances[self.end_name] = 0.0
 
@@ -51,6 +70,12 @@ class PathFinder:
         return distances
 
     def get_distance(self, zone_name: str) -> float:
-        """Returns the precomputed shortest distance from the
-        given zone to the end zone."""
+        """Returns the precomputed shortest distance from the given zone.
+
+        Args:
+            zone_name (str): The name of the zone to check.
+
+        Returns:
+            float: The distance to the end zone, or infinity if unreachable.
+        """
         return self.distances.get(zone_name, float("inf"))

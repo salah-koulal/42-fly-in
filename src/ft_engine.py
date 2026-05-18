@@ -1,3 +1,5 @@
+"""Module providing the core simulation engine for drone movement."""
+
 import sys
 from typing import List
 from src.models.ft_drone import Drone
@@ -6,10 +8,24 @@ from src.algorithms.path_finder import PathFinder
 
 
 class Simulator:
-    """Handles the simulation logic of drone movements across the map."""
+    """Handles the simulation logic of drone movements across the map.
+
+    Attributes:
+        map_data (ParsedMap): The parsed map data representing the network.
+        start_zone (Zone): The starting zone for all drones.
+        end_zone (Zone): The destination zone for all drones.
+        pf (PathFinder): PathFinder instance used to determine shortest paths.
+        drones (List[Drone]): List of drones participating in the simulation.
+        turn_count (int): Counter tracking the number of simulation turns.
+        history (List[List[str]]): Log of drone movements per turn.
+    """
 
     def __init__(self, parsed_map: ParsedMap):
-        """Initializes the simulator with the parsed map data."""
+        """Initializes the simulator with the parsed map data.
+
+        Args:
+            parsed_map (ParsedMap): The parsed map configuration.
+        """
         self.map_data = parsed_map
         self.start_zone = parsed_map.start_hub
         self.end_zone = parsed_map.end_hub
@@ -24,7 +40,15 @@ class Simulator:
         self.history: List[List[str]] = []
 
     def _get_connection_name(self, zone1_name: str, zone2_name: str) -> str:
-        """Returns the normalized connection name between two zones."""
+        """Returns the normalized connection name between two zones.
+
+        Args:
+            zone1_name (str): Name of the first zone.
+            zone2_name (str): Name of the second zone.
+
+        Returns:
+            str: The normalized name of the connection linking the zones.
+        """
         z1, z2 = zone1_name.strip(), zone2_name.strip()
         for conn in self.map_data.connections:
             c1, c2 = conn.zone1.name.strip(), conn.zone2.name.strip()
@@ -33,7 +57,11 @@ class Simulator:
         return f"{zone1_name}-{zone2_name}"
 
     def _is_finished(self) -> bool:
-        """Checks if all drones have successfully reached the destination."""
+        """Checks if all drones have successfully reached the destination.
+
+        Returns:
+            bool: True if all drones are at the end zone, False otherwise.
+        """
         for drone in self.drones:
             if (
                 drone.current_zone.name.strip() != self.end_zone.name.strip()
@@ -43,7 +71,12 @@ class Simulator:
         return True
 
     def run_turn(self) -> List[str]:
-        """Executes a single simulation turn and returns the drone moves."""
+        """Executes a single simulation turn and returns the drone moves.
+
+        Returns:
+            List[str]: A list of formatted movement strings (e.g., 'D1-roof1')
+            for the current turn.
+        """
         turn_moves = []
         moved_this_turn = set()
 

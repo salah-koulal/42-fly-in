@@ -7,7 +7,11 @@ from src.ft_2D_renderer import Renderer2D
 
 
 def main():
-    """Main entry point for the fly-in drone simulator."""
+    """Main entry point for the fly-in drone simulator.
+
+    Parses command-line arguments, validates the input map, initializes the
+    simulation engine, runs the simulation, and optionally visualizes it.
+    """
     parser_args = argparse.ArgumentParser(
         description="Fly-in: Drone Routing & Simulator"
     )
@@ -53,7 +57,7 @@ def main():
                 )
                 i += 1
 
-    except Exception as e:
+    except BaseException as e:
         print(f"Error: {e}")
         sys.exit(1)
 

@@ -1,9 +1,16 @@
+"""Automated testing script to verify error handling for invalid maps."""
+
 import os
 import glob
 import subprocess
 
 
 def main():
+    """Runs tests against all invalid map configurations.
+
+    Iterates over all .txt files in maps/error/, runs the simulator, and ensures
+    that each invalid map is successfully rejected with a non-zero exit code.
+    """
     error_maps = glob.glob("maps/error/*.txt")
     if not error_maps:
         print("No error maps found.")

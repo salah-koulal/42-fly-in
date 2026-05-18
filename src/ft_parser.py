@@ -1,3 +1,5 @@
+"""Module responsible for parsing and validating map configuration files."""
+
 from typing import List, Dict, Optional
 from src.models.ft_zone import Zone, ZoneType
 from src.models.ft_connection import Connection
@@ -7,7 +9,15 @@ from pathlib import Path
 
 @dataclass
 class ParsedMap:
-    """Dataclass to hold the validated map data"""
+    """Dataclass to hold the validated map data.
+
+    Attributes:
+        nb_drones (int): The total number of drones in the simulation.
+        start_hub (Zone): The starting zone where drones originate.
+        end_hub (Zone): The destination zone where drones must arrive.
+        zones (Dict[str, Zone]): Dictionary mapping zone names to their objects.
+        connections (List[Connection]): List of all valid connections.
+    """
 
     nb_drones: int
     start_hub: Zone
@@ -17,10 +27,17 @@ class ParsedMap:
 
 
 class MapParser:
-    """Parser for input files."""
+    """Parser for input files defining the drone simulation network.
+
+    Attributes:
+        zones (Dict[str, Zone]): Dictionary mapping zone names to Zone objects.
+        connections (list[Connection]): List of parsed Connection objects.
+        seen_connections (set[tuple[str, str]]): Set to detect duplicate links.
+        nb_drones_parsed (bool): Flag indicating if nb_drones was parsed.
+    """
 
     def __init__(self) -> None:
-        """Initialize the parser."""
+        """Initializes the parser with empty structures."""
         self.zones: Dict[str, Zone] = {}
         self.connections: list[Connection] = []
         self.seen_connections: set[tuple[str, str]] = set()
@@ -29,7 +46,18 @@ class MapParser:
     def _parse_metadata(
         self, metadata_str: Optional[str], n_line: int
     ) -> dict:
-        """Parses metadata string and returns a dictionary of attributes."""
+        """Parses a metadata string into a dictionary of attributes.
+
+        Args:
+            metadata_str (Optional[str]): Metadata string (e.g. "[color=red]").
+            n_line (int): Line number being parsed, used for error reporting.
+
+        Returns:
+            dict: A dictionary of key-value pairs extracted from the metadata.
+
+        Raises:
+            ValueError: If metadata format is invalid or has unknown keys.
+        """
         required_metadata = [
             "max_drones",
             "color",
@@ -75,7 +103,18 @@ class MapParser:
         return parsed_data
 
     def file_parsing(self, filepath) -> ParsedMap:
-        """Parses the input map file and returns a ParsedMap object."""
+        """Parses the input map file and returns a ParsedMap object.
+
+        Args:
+            filepath (str): The path to the map configuration file.
+
+        Returns:
+            ParsedMap: A dataclass containing the validated network data.
+
+        Raises:
+            FileNotFoundError: If the specified file does not exist.
+            ValueError: If any parsing constraints or validations fail.
+        """
         path = Path(filepath)
         if not path.exists():
             raise FileNotFoundError(f"Map file not found: {filepath}")

@@ -1,3 +1,5 @@
+"""Module responsible for the 2D graphical visualization of the simulation."""
+
 import os
 import sys
 
@@ -7,7 +9,15 @@ import pygame  # noqa: E402
 
 
 class Camera:
-    """Handles camera movement and zooming for the 2D renderer."""
+    """Handles camera movement and zooming for the 2D renderer.
+
+    Attributes:
+        offset_x (float): The current X-axis offset for panning.
+        offset_y (float): The current Y-axis offset for panning.
+        zoom (float): The current zoom level.
+        is_dragging (bool): Indicates if the user is currently dragging the map.
+        last_mouse_pos (tuple): The last recorded (x, y) mouse coordinates.
+    """
 
     def __init__(self):
         """Initializes the camera with default offset and zoom."""
@@ -18,13 +28,24 @@ class Camera:
         self.last_mouse_pos = (0, 0)
 
     def apply(self, pos):
-        """Converts world coordinates to screen coordinates."""
+        """Converts world coordinates to screen coordinates.
+
+        Args:
+            pos (tuple): A tuple containing (x, y) world coordinates.
+
+        Returns:
+            tuple: The corresponding (x, y) screen pixel coordinates.
+        """
         screen_x = (pos[0] + self.offset_x) * self.zoom
         screen_y = (pos[1] + self.offset_y) * self.zoom
         return (int(screen_x), int(screen_y))
 
     def handle_event(self, event):
-        """Handles mouse events for panning and zooming."""
+        """Handles mouse events for panning and zooming.
+
+        Args:
+            event (pygame.event.Event): The pygame event to process.
+        """
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 self.is_dragging = True
@@ -45,10 +66,24 @@ class Camera:
 
 
 class Renderer2D:
-    """Renders the drone simulation using pygame."""
+    """Renders the drone simulation using pygame.
+
+    Attributes:
+        map_data (ParsedMap): The parsed map structure to render.
+        history (List[List[str]]): The simulation state history.
+        current_turn (int): The currently rendered simulation turn.
+        max_turns (int): Total number of turns in the simulation.
+        is_paused (bool): Indicates if the simulation playback is paused.
+        camera (Camera): The camera used to manage panning and zooming.
+    """
 
     def __init__(self, map_data, engine_history):
-        """Initializes the 2D renderer with map data and simulation history."""
+        """Initializes the 2D renderer with map data and simulation history.
+
+        Args:
+            map_data (ParsedMap): The parsed map data.
+            engine_history (List[List[str]]): Log of drone movements per turn.
+        """
         self.map_data = map_data
         self.history = engine_history
 
