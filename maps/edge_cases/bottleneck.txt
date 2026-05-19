@@ -1,0 +1,8 @@
+nb_drones: 10
+start_hub: start 0 0
+end_hub: end 10 10
+hub: A 3 3 [max_drones=10]
+hub: B 7 7 [max_drones=10]
+connection: start-A
+connection: A-B [max_link_capacity=1]
+connection: B-end

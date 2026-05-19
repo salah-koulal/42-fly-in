@@ -1,0 +1,176 @@
+SCALE FOR PROJECT FLY-IN (/PROJECTS/F
+You should evaluate 1 student in this team
+Git repository
+Introduction
+- Remain polite, courteous, respectful and constructivethroughout the evaluation process. The well-being of the communitydepends on it.
+- Identify with the person (or the group) evaluated the eventualdysfunctions of the work. Take the time to discussand debate the problems you have identified.
+- You must consider that there might be some difference in how yourpeers might have understood the project's instructions and thescope of its functionalities. Always keep an open mind and gradehim/her as honestly as possible. The pedagogy is valid only andonly if peer-evaluation is conducted seriously.
+Guidelines
+- Only grade the work that is in the student or group'sGiT repository.
+- Double-check that the GiT repository belongs to the studentor the group. Ensure that the work is for the relevant projectand also check that "git clone" is used in an empty folder.
+- Check carefully that no malicious aliases was used to fool youand make you evaluate something other than the content of theofficial repository.
+- To avoid any surprises, carefully check that both the evaluatingand the evaluated students have reviewed the possible scripts usedto facilitate the grading.
+- If the evaluating student has not completed that particularproject yet, it is mandatory for this student to read theentire subject prior to starting the defence.
+- Use the flags available on this scale to signal an empty repository,non-functioning program, a norm error, cheating etc. In these cases,the grading is over and the final grade is 0 (or -42 in case ofcheating). However, with the exception of cheating, you areencouraged to continue to discuss your work (even if you have notfinished it) in order to identify any issues that may have causedthis failure and avoid repeating the same mistake in the future.
+- Remember that for the duration of the defence, no segfault,no other unexpected, premature, uncontrolled or unexpectedtermination of the program, else the final grade is 0. Use theappropriate flag.You should never have to edit any file except the configuration file if it exists.If you want to edit a file, take the time to explicit the reasons with theevaluated student and make sure both of you are okay with this.
+- You must also verify the absence of memory leaks. Any memory allocated on the heap must
+
+git@vogsphere.1337.ma:vogsphere/intra-uuid-16e96762-9c29-4447-8
+(https://profile.intra.42.fr)
+ (https://profile.intra.42.fr/searches) yelgoumr
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 1/7
+be properly freed before the end of execution.You are allowed to use any of the different tools available on the computer, such asleaks, valgrind, or e_fence. In case of memory leaks, tick the appropriate flag.
+Attachments
+ subject.pdf (https://cdn.intra.42.fr/pdf/pdf/203278/en.subject.pdf)
+ maps.tar.gz (https://cdn.intra.42.fr/document/document/48308/maps.tar.gz)
+Preliminaries
+Basics
+The review is done in the presence of the graded learner(s). Thisis how everyone progresses: by interacting with others.
+The learner(s) must be present during the defense.If the learner is not present, the review cannot proceed.As soon as a core functionality is non-functional, the review stops. You can look at the code osections, but they will not be graded.
+Work submission
+Only grade the work that is in the learner's or group'sGit repository. Check that only the requested files are availablein the git repository. If not, the evaluation stops here.
+README.md
+README.md file
+Does the repository contain a README.md file at its root, and does it include all of the following?
+A "Description" section explaining the project's purpose and providing a brief overview.An "Instructions" section with details about how to run the project.An "Algorithm explanation" section describing the pathfinding approach and design decisionsDocumentation of visual representation features and how they enhance user experience.Example input and expected output demonstrating the program's functionality.
+Project Structure and Requirements
+OOP
+The project is completely object-oriented with proper class designand follows Python OOP best practices. Check for proper class separation,encapsulation, and inheritance where appropriate.
+Type safe
+The project is completely typesafe and passes mypy type checking without errors.Run 'mypy .' in the project directory to verify. If mypy is not installed,check that type hints are present throughout the codebase.
+Graph implementation
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 2/7
+The graph implementation is custom-built without using forbidden libraries(such as networkx, graphlib, etc.). The learner should be able to explain how it works.
+Parser Implementation
+Input files
+Test the parser with valid input files. The parser correctly handles the new input file format including
+Number of drones using "nb_drones: <number>" formatZone definitions with type prefixes (start_hub:, end_hub:, hub:)Connection definitions using "connection: <zone1>-<zone2>" formatOptional metadata with defaults (zone=normal, max_drones=1)Connection metadata with max_link_capacity=1 defaultComments starting with '#' are ignored
+At least 4 out of 5 format requirements should work correctly.
+Error handling
+Test error handling in the parser. The parser correctly handles errors:
+Test with malformed files (missing drone count, invalid format)Test with invalid zone types (should reject with clear error messages)Test with missing start_hub or end_hub definitionsTest with invalid capacity values (non-positive integers)Test with duplicate zone names or connections
+At least 4 out of 5 error cases should be handled correctly with clear error messages.
+Zone and Movements Mechanics
+Zone occupancy rules
+Test zone occupancy rules with capacity constraints:
+Zones respect max_drones capacity (default 1)Drones cannot enter zones that would exceed capacityMultiple drones can share start and end zonesCapacity constraints are properly enforced during simulation
+Create test cases to verify these rules are enforced.
+Movement costs
+Test movement costs based on zone types:
+normal zones: 1 turn (default)restricted zones: 2 turnspriority zones: 1 turn (but preferred in pathfinding)blocked zones: inaccessible
+Verify the simulation respects these movement costs in the output.
+Connection capacity
+Test connection capacity constraints:
+Connections respect max_link_capacity defined in connection metadata (default 1)Multiple drones can traverse high-capacity connections simultaneouslyConnection capacity limits are enforced during movement
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 3/7
+Verify capacity constraints work correctly in simulation.
+Visual Representation
+Visualization features
+Test visual representation features:
+The program provides a clear visual feedback (colored terminal output and/or graphical interfColors specified in zone metadata are used for visualizationVisual representation enhances understanding of the simulationThe visual system clearly shows drone positions and movements
+The implementation should demonstrate meaningful visual feedback.
+Basic Functionality Tests
+Simple scenarios
+Test with simple scenarios:- Test with single drone on a linear path- Test with multiple drones using different paths- Test with provided example maps from attachments/- Verify output format: each line represents one turn, format "D<ID>-<zone>" or "D<ID>-<connection- Verify stationary drones are omitted from output
+At least 4 out of 5 basic tests should pass successfully.
+Simulation ends correctly
+Test that the simulation ends correctly when all drones reach the end zone.The program should stop producing output once all drones have arrived.
+Pathfinding Algorithm
+Valid path
+The pathfinding algorithm successfully finds valid paths fromstart to end zone for various test cases. Test with:
+Simple linear mapsMaps with multiple possible pathsMaps with bottlenecks and capacity constraintsMaps using different zone types
+The algorithm should find valid solutions for most test cases.
+Conflict resolution
+Test conflict resolution and capacity management:
+Test scenarios where drones compete for limited capacityVerify the algorithm handles multiple drones simultaneouslyCheck that capacity constraints prevent conflictsTest turn-based movement with multi-turn zones (restricted)
+The algorithm should demonstrate proper capacity-aware conflict resolution.
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 4/7
+Performance and Optimization
+Efficiency
+Test with more complex scenarios to evaluate performance:
+Test with higher drone counts (10+ drones)Test with complex map topologies and capacity constraintsVerify the solution minimizes total simulation turnsTest performance with large graphs
+Note: This is not a failing requirement but should show reasonable performance.
+Algorithm explanation
+The learner can explain their algorithm complexity, design decisions,and trade-offs made in their implementation. They should be able todiscuss their pathfinding approach, capacity management, and optimization strategies.
+Performance Benchmarks
+Easy maps
+Test performance against reference benchmarks using provided maps:Does the algorithm solve the Easy maps in less than 10 turns on average?
+Reference targets (for information only):
+Linear path (2 drones): ≤ 6 turnsSimple fork (3 drones): ≤ 6 turnsBasic capacity (4 drones): ≤ 8 turns These reference values are provided as optimization goalearners evaluate and tune their algorithms.
+Medium maps
+Test performance against reference benchmarks using provided maps:Does the algorithm solve the Medium maps in less 10–30 turns on average?
+Reference targets (for information only):- Dead end trap (5 drones): ≤ 15 turns- Circular loop (6 drones): ≤ 20 turns- Priority puzzle (4 drones): ≤ 12 turnsThese reference values are provided as optimization goals to help learners evaluateand tune their algorithms. as optimization goals to help learners evaluateand tune their algorithms.
+Hard maps
+Test performance against reference benchmarks using provided maps:Does the algorithm solve the Hard maps in less tha 60 turns on average?
+Reference targets (for information only):
+Maze nightmare (8 drones): ≤ 45 turnsCapacity hell (12 drones): ≤ 60 turnsUltimate challenge (15 drones): ≤ 35 turns These reference values are provided as optimizatlearners evaluate and tune their algorithms.
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 5/7
+Edge Cases and Error Handling
+Edge cases
+est edge cases:
+Single drone scenariosMaps with bottlenecks or limited capacityDisconnected graphs (should handle gracefully)Invalid connections between zonesZero or very high capacity values
+At least 4 out of 5 edge cases should be handled correctly.
+Error handling
+The program provides appropriate error handling for invalid inputs:
+Malformed files with new format requirementsMissing start_hub or end_hub zonesInvalid capacity valuesDisconnected graphsInvalid zone types or connections
+Error messages should be clear and informative.
+Code Quality and Documentation
+Code quality
+Code quality assessment:
+Code is well-structured and readableProper use of object-oriented principlesAppropriate comments and documentationConsistent coding styleVisual representation code is well-integrated
+Note: This is not a failing requirement but contributes to overall quality.
+Quick Live Coding modifications
+Live coding
+Please ask the reviewee to add a simple modification to their drone simulation program.Ask them to add a "--capacity-info" flag that displays capacity information during simulation,such as "Zone X: Y/Z drones, Connection A-B: Y/Z capacity used" for each turn.
+For example, "./main.py --capacity-info map.txt" should output the normal simulation pluscapacity usage information. The reviewee should be able to locate the relevantparsing and output code, make the necessary modifications, and demonstrate that it workswith a test case. The entire task, including the demonstration, should take no morethan 10 minutes. Was this procedure followed and did everything work correctly?
+Bonus Features
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+ Yes  No
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 6/7
+Finish evaluation
+Exeptional Performance
+The Performance 'perfectly' meet the performance reference targets for all provided maps.'Perfectly' meaning the algorithm meets exactly or outperforms the the number of turns specifiedin the reference targets for each map category.Targets are:Easy maps:- Linear path (2 drones): ≤ 6 turns- Simple fork (3 drones): ≤ 6 turns- Basic capacity (4 drones): ≤ 8 turns≤ reference turnsMedium maps:- Dead end trap (5 drones): ≤ 15 turns- Circular loop (6 drones): ≤ 20 turns- Priority puzzle (4 drones): ≤ 12 turnsHard maps:- Maze nightmare (8 drones): ≤ 45 turns- Capacity hell (12 drones): ≤ 60 turns- Ultimate challenge (15 drones): ≤ 35 turns
+Challenger Map
+The Impossible Dream map is solved and beats the reference record of 45 turns.
+ Yes  No
+ Yes  No
+Ratings
+Don’t forget to check the flag corresponding to the defense
+ Ok  Outstanding project
+Empty work Incomplete workW Invalid compilation Norme  Cheat
+ Incomplete group Concerning situation Leaks l Forbidd
+ Can’t support / explain code
+Conclusion
+Leave a comment on this evaluation ( 2048 chars max )
+API General Terms of Use(https://profile.intra.42.fr/legal/terms/33) Declaration on the use of cookies(https://profile.intra.42.fr/legal/terms/2) Privacy policy(https://profile.intra.42.fr/legal/terms/5) General term of use of the site(https://profile.intra.42.fr/legal/terms/6) Rules of pro(https://profile.intra.42
+5/12/26, 3:05 PM Intra Projects Fly-in Edit
+https://projects.intra.42.fr/scale_teams/9378117/edit 7/7
