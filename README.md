@@ -16,8 +16,8 @@ This project focuses heavily on algorithmic efficiency, concurrency (deadlock pr
 ## 🔧 System Architecture Pipeline :
 
 
+<img src="Bidirectional Graph Routing-2026-05-28-191225.svg">
 
-![alt text](<Bidirectional Graph Routing-2026-05-28-191225-1.svg>)
 ---
 
 ## ⚙️ Instructions
