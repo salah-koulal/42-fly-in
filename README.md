@@ -12,6 +12,12 @@ The simulation strictly enforces complex mechanical constraints, including:
 
 This project focuses heavily on algorithmic efficiency, concurrency (deadlock prevention), and robust input parsing, with the ultimate goal of solving the complex "Challenger" maps in record turns.
 
+
+## 🔧 System Architecture Pipeline :
+
+
+
+![alt text](<Bidirectional Graph Routing-2026-05-28-191225-1.svg>)
 ---
 
 ## ⚙️ Instructions
