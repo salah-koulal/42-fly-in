@@ -15,8 +15,53 @@ This project focuses heavily on algorithmic efficiency, concurrency (deadlock pr
 
 ## 🔧 System Architecture Pipeline :
 
+```mermaid
+---
+config:
+  layout: elk
+---
+flowchart TD
+    %% Core System
+    Parser["Parser<br/>Reads & validates .txt input"]
+    Graph["Graph Builder<br/>Creates Zone & Connection objects"]
+    Pathfinder["Pathfinder<br/>Reverse Dijkstra (multi-path)"]
+    Simulator["Simulator Engine<br/>Turn-by-turn loop<br/>Handles occupancy + movement"]
+    
+    %% Classes managed by Simulator
+    Zone["Zone<br/>Attributes: type, color, max_drones"]
+    Connection["Connection<br/>Attributes: capacity, links two Zones"]
+    Drone["Drone<br/>State: current_zone, path, status"]
+    
+    %% Visualization options
+    Visual["Visual Output<br/>Unified Interface"]
+    TermViz["Terminal Output"]
+    GuiViz["Pygame GUI"]
+    
+    %% Flow
+    Parser --> Graph
+    Graph --> Pathfinder
+    Pathfinder --> Simulator
+    Simulator --> Zone
+    Simulator --> Connection
+    Simulator --> Drone
+    Simulator --> Visual
+    Visual --> TermViz
+    Visual --> GuiViz
+    
+    %% Styling
+    classDef parseStyle stroke:#818cf8,fill:#eef2ff
+    classDef graphStyle stroke:#2dd4bf,fill:#f0fdfa
+    classDef pathStyle stroke:#a78bfa,fill:#f5f3ff
+    classDef simStyle stroke:#fb923c,fill:#fff7ed
+    classDef vizStyle stroke:#22d3ee,fill:#ecfeff
+    
+    class Parser parseStyle
+    class Graph graphStyle
+    class Pathfinder pathStyle
+    class Simulator,Zone,Connection,Drone simStyle
+    class Visual,TermViz,GuiViz vizStyle
 
-<img src="Bidirectional Graph Routing-2026-05-28-191225.svg">
+```
 
 ---
 
