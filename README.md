@@ -16,10 +16,6 @@ This project focuses heavily on algorithmic efficiency, concurrency (deadlock pr
 ## 🔧 System Architecture Pipeline :
 
 ```mermaid
----
-config:
-  layout: elk
----
 flowchart TD
     %% Core System
     Parser["Parser<br/>Reads & validates .txt input"]
@@ -48,12 +44,12 @@ flowchart TD
     Visual --> TermViz
     Visual --> GuiViz
     
-    %% Styling
-    classDef parseStyle stroke:#818cf8,fill:#eef2ff
-    classDef graphStyle stroke:#2dd4bf,fill:#f0fdfa
-    classDef pathStyle stroke:#a78bfa,fill:#f5f3ff
-    classDef simStyle stroke:#fb923c,fill:#fff7ed
-    classDef vizStyle stroke:#22d3ee,fill:#ecfeff
+    %% Styling (black text added)
+    classDef parseStyle stroke:#818cf8,fill:#eef2ff,color:#000
+    classDef graphStyle stroke:#2dd4bf,fill:#f0fdfa,color:#000
+    classDef pathStyle stroke:#a78bfa,fill:#f5f3ff,color:#000
+    classDef simStyle stroke:#fb923c,fill:#fff7ed,color:#000
+    classDef vizStyle stroke:#22d3ee,fill:#ecfeff,color:#000
     
     class Parser parseStyle
     class Graph graphStyle
